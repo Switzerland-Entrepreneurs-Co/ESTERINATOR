@@ -17,6 +17,9 @@ class MainWindow(QMainWindow):
         # --- CONFIGURAZIONE CARTELLA LIBRERIA ---
         # Crea una cartella "audio_library" nella directory del progetto
         base_dir = os.path.dirname(os.path.abspath(__file__))
+        base_dir = os.path.dirname(base_dir)
+        base_dir = os.path.dirname(base_dir)
+        print(base_dir)
         # Se main.py è nella root, ok. Se è in src, potresti dover fare os.path.dirname due volte.
         # Assumiamo main.py sia nella root del progetto:
         self.library_path = os.path.join(base_dir, "audio_library")
