@@ -1,156 +1,123 @@
+import asyncio
 import os
-import time
-import threading
-import pythoncom
-import win32com.client
+import edge_tts
+
 
 class TTSEngine:
     def __init__(self):
-        self.dialogue_lock = threading.Lock()
-        self.speaker = win32com.client.Dispatch("SAPI.SpVoice")
         self.voices = []
-        self._load_voices()
+        # Carica le voci all'avvio
+        asyncio.run(self._load_voices_async())
 
-    def _load_voices(self):
-        # Raccoglie le voci installate in Windows
-        self.voices = []
-        for voice in self.speaker.GetVoices():
-            desc = voice.GetDescription()
-            self.voices.append({"id": desc, "name": desc})
+    def _format_voice_name(self, voice_data):
+        """
+        Trasforma i dati grezzi in un nome leggibile.
+        Input: {'ShortName': 'it-IT-DiegoNeural', 'Gender': 'Male', 'Locale': 'it-IT'}
+        Output: "Diego (Italiano) - M"
+        """
+        try:
+            # ShortName è tipo "it-IT-DiegoNeural"
+            short_name = voice_data['ShortName']
+            locale = voice_data['Locale']
+            gender = "M" if voice_data['Gender'] == "Male" else "F"
+
+            # Estraiamo il nome (es. Diego) rimuovendo "Neural" e il prefisso locale
+            # Solitamente è l'ultima parte dopo l'ultimo trattino
+            raw_name = short_name.split('-')[-1].replace('Neural', '')
+
+            # Mappiamo il locale in una lingua leggibile (base)
+            lang_map = {
+                'it-IT': 'Italiano', 'en-US': 'Inglese USA', 'en-GB': 'Inglese UK',
+                'fr-FR': 'Francese', 'de-DE': 'Tedesco', 'es-ES': 'Spagnolo'
+            }
+            lang_readable = lang_map.get(locale, locale)  # Fallback al codice se non trovato
+
+            return f"{raw_name} ({lang_readable}) - {gender}"
+        except:
+            return voice_data['ShortName']
+
+    async def _load_voices_async(self):
+        try:
+            voices = await edge_tts.list_voices()
+            self.voices = []
+            for v in voices:
+                friendly_name = self._format_voice_name(v)
+                self.voices.append({
+                    "id": v['ShortName'],
+                    "name": friendly_name,
+                    "locale": v['Locale']  # Utile per ordinare
+                })
+
+            # Ordiniamo: Prima le italiane, poi le altre
+            self.voices.sort(key=lambda x: (x['locale'] != 'it-IT', x['name']))
+
+        except Exception as e:
+            print(f"[TTSEngine] Errore caricamento voci: {e}")
 
     def get_voices(self):
         return self.voices
 
-    def set_voice(self, voice_id):
-        for voice in self.speaker.GetVoices():
-            if voice.GetDescription() == voice_id:
-                self.speaker.Voice = voice
-                return True
-        return False
-
-    def generate_audio(self, text, voice_id, output_path):
+    async def _generate_audio_async(self, text, voice_id, output_path):
+        if not voice_id: voice_id = "it-IT-ElsaNeural"
         try:
-            # Per evitare problemi COM in thread
-            pythoncom.CoInitialize()
-
-            # Cambia voce se serve
-            if voice_id and not self.set_voice(voice_id):
-                print(f"[TTSEngine] Voce {voice_id} non trovata, uso voce di default")
-
-            # Usa SpFileStream per salvare in wav
-            stream = win32com.client.Dispatch("SAPI.SpFileStream")
-            stream_format = win32com.client.Dispatch("SAPI.SpAudioFormat")
-            stream_format.Type = 22  # 22 = 16kHz 16bit mono PCM (puoi cambiare se vuoi)
-
-            stream.Format = stream_format
-            stream.Open(output_path, 3, False)  # 3 = SSFMCreateForWrite
-            self.speaker.AudioOutputStream = stream
-
-            self.speaker.Speak(text)
-
-            stream.Close()
-            self.speaker.AudioOutputStream = None
-
-            pythoncom.CoUninitialize()
+            communicate = edge_tts.Communicate(text, voice_id)
+            await communicate.save(output_path)
             return True
-
         except Exception as e:
-            print(f"[TTSEngine] Errore generazione audio Windows TTS: {e}")
+            print(f"[TTSEngine] Errore async: {e}")
             return False
 
-    def generate_dialogue(self, segments, output_dir, wait_timeout=8.0):
-        if not self.dialogue_lock.acquire(blocking=False):
-            print("[TTS] Generazione dialogo già in corso, attendere prima di richiedere un nuovo dialogo.")
-            return []
+    def generate_dialogue(self, segments, final_output_path):
+        """
+        Genera il dialogo salvandolo esattamente in final_output_path.
+        """
+        output_dir = os.path.dirname(final_output_path)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
 
-        try:
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir, exist_ok=True)
+        temp_files = []
+        print(f"Inizio generazione -> {final_output_path}")
 
-            temp_files = []
-            print("Inizio generazione segmenti...")
+        for idx, seg in enumerate(segments):
+            # Creiamo i file temp nella stessa cartella dell'output finale
+            # per evitare errori di permessi tra dischi diversi
+            filename = f"temp_seg_{idx}.mp3"
+            full_path = os.path.join(output_dir, filename)
 
-            for idx, seg in enumerate(segments):
-                filename = f"temp_{idx}.wav"
-                full_path = os.path.join(output_dir, filename)
+            voice_id = seg.get('voice', '')
+            text = seg.get('text', '')
 
-                voice_id = seg.get('voice', '')
-                print(f"[TTS] Segmento {idx} voice={voice_id!r}")
+            print(f"[TTS] Processo segmento {idx}...")
 
-                success = self.generate_audio(seg.get('text', ''), voice_id, full_path)
-                if not success:
-                    print(f"[TTS] Errore generazione segmento {idx}, salto.")
-                    continue
-
-                if self._wait_for_wav_ready(full_path, timeout=wait_timeout):
-                    temp_files.append(full_path)
-                else:
-                    print(f"[TTS] File {full_path} non pronto o vuoto dopo {wait_timeout}s. Skipping.")
-
-            if not temp_files:
-                print("[TTS] Nessun file da unire.")
-                return []
-
-            final_output = os.path.join(output_dir, "dialogo_completo.wav")
-            print(f"[TTS] Unione in corso -> {final_output}")
-
-            merged_success = self._merge_wav_files(temp_files, final_output, pause_ms=300)
-
-            for f in temp_files:
-                try:
-                    if os.path.exists(f):
-                        os.remove(f)
-                except Exception as e:
-                    print(f"[TTS] Impossibile rimuovere {f}: {e}")
-
-            return [final_output] if merged_success else []
-
-        finally:
-            self.dialogue_lock.release()
-
-    def _wait_for_wav_ready(self, path, timeout=8.0, poll_interval=0.12):
-        import wave
-        start = time.time()
-        while time.time() - start < timeout:
             try:
-                if os.path.exists(path) and os.path.getsize(path) > 44:
-                    with wave.open(path, 'rb') as w:
-                        if w.getnframes() > 0:
-                            return True
-            except Exception:
-                pass
-            time.sleep(poll_interval)
-        return False
+                success = asyncio.run(self._generate_audio_async(text, voice_id, full_path))
+                if success and os.path.exists(full_path):
+                    temp_files.append(full_path)
+            except Exception as e:
+                print(f"Errore generazione segmento: {e}")
 
-    def _merge_wav_files(self, file_list, output_path, pause_ms=300):
-        import wave
-        if not file_list:
-            print("[MERGE] Nessun file da unire")
+        if not temp_files:
             return False
 
+        # Merge finale
+        success_merge = self._merge_mp3_files(temp_files, final_output_path)
+
+        # Pulizia
+        for f in temp_files:
+            try:
+                os.remove(f)
+            except:
+                pass
+
+        return success_merge
+
+    def _merge_mp3_files(self, file_list, output_path):
         try:
-            with wave.open(file_list[0], 'rb') as first_wav:
-                params = first_wav.getparams()
-
-            with wave.open(output_path, 'wb') as out_w:
-                out_w.setparams(params)
-
-                for idx, fname in enumerate(file_list):
-                    with wave.open(fname, 'rb') as r:
-                        frames = r.readframes(r.getnframes())
-                        out_w.writeframes(frames)
-
-                        if pause_ms > 0 and idx != (len(file_list) - 1):
-                            frame_rate = r.getframerate()
-                            n_channels = r.getnchannels()
-                            samp_width = r.getsampwidth()
-                            silence_frames = int(frame_rate * (pause_ms / 1000.0))
-                            silence_bytes = b'\x00' * silence_frames * samp_width * n_channels
-                            out_w.writeframes(silence_bytes)
-
-            print(f"[MERGE] Output creato con successo (concatenazione semplice): {output_path}")
+            with open(output_path, 'wb') as outfile:
+                for fname in file_list:
+                    with open(fname, 'rb') as infile:
+                        outfile.write(infile.read())
             return True
-
         except Exception as e:
-            print(f"[MERGE] Errore nel merge semplice: {e}")
+            print(f"[MERGE] Errore: {e}")
             return False
