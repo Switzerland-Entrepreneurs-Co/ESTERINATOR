@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -72,6 +73,9 @@ class TTSGeneratorView(QWidget):
 
         self.voice_combo.setCurrentIndex(default_idx)
 
+    def set_editor_content(self, text):
+        self.text_edit.setPlainText(text)
+
     def insert_voice_marker(self):
         voice_id = self.voice_combo.currentData()
         # Per pulizia, nel testo inseriamo solo l'ID tecnico, ma l'utente ha scelto dal nome bello
@@ -105,6 +109,8 @@ class TTSGeneratorView(QWidget):
 
         full_path = os.path.join(self.library_path, f"{safe_filename}.mp3")
 
+        json_path = os.path.join(self.library_path, f"{safe_filename}.json")
+
         # Verifica sovrascrittura
         if os.path.exists(full_path):
             reply = QMessageBox.question(
@@ -124,6 +130,18 @@ class TTSGeneratorView(QWidget):
             success = self.tts_engine.generate_dialogue(segments, full_path)
 
             if success:
+                QMessageBox.information(self, "Fatto", f"Salvato in Libreria:\n{safe_filename}.mp3")
+                # --- SALVIAMO IL TESTO ORIGINALE ---
+                project_data = {
+                    "text": text,
+                    "version": "1.0"
+                }
+                try:
+                    with open(json_path, 'w', encoding='utf-8') as f:
+                        json.dump(project_data, f, ensure_ascii=False, indent=4)
+                except Exception as e:
+                    print(f"Attenzione: impossibile salvare il file progetto: {e}")
+
                 QMessageBox.information(self, "Fatto", f"Salvato in Libreria:\n{safe_filename}.mp3")
             else:
                 QMessageBox.critical(self, "Errore", "Errore durante la generazione.")

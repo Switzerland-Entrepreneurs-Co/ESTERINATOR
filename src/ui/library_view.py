@@ -1,14 +1,18 @@
+import json
 import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QListView, QLabel,
     QPushButton, QHBoxLayout, QMessageBox,
     QFileSystemModel, QMenu, QAbstractItemView
 )
-from PySide6.QtCore import QUrl, Qt
+from PySide6.QtCore import QUrl, Qt, Signal
 from PySide6.QtGui import QDesktopServices, QCursor, QAction
 
 
 class AudioLibraryView(QWidget):
+    # Creiamo un segnale che dice: "Ehi Main, qualcuno vuole editare questo testo!"
+    edit_requested = Signal(str)
+
     def __init__(self, library_path):
         super().__init__()
         self.library_path = library_path
@@ -61,6 +65,11 @@ class AudioLibraryView(QWidget):
         self.btn_refresh.clicked.connect(self.refresh_view)
         btn_layout.addWidget(self.btn_refresh)
 
+        self.btn_edit = QPushButton("✏️ Edita Testo")
+        self.btn_edit.setStyleSheet("background-color: #FFF3E0; color: #E65100; font-weight: bold;")
+        self.btn_edit.clicked.connect(self.load_text_for_editing)
+        btn_layout.addWidget(self.btn_edit)
+
         # PULSANTE ELIMINA (Rosso per attenzione)
         self.btn_delete = QPushButton("Elimina File")
         self.btn_delete.setStyleSheet("background-color: #ffcccc; color: #cc0000; font-weight: bold;")
@@ -71,37 +80,66 @@ class AudioLibraryView(QWidget):
 
         self.setLayout(layout)
 
+    # --- LOGICA EDITA ---
+    def load_text_for_editing(self):
+        index = self.list_view.currentIndex()
+        if not index.isValid():
+            QMessageBox.warning(self, "Attenzione", "Seleziona un file da editare.")
+            return
+
+        mp3_path = self.model.filePath(index)
+
+        # Cerchiamo il file JSON corrispondente
+        # Se il file è "audio.mp3", cerchiamo "audio.json"
+        base_path = os.path.splitext(mp3_path)[0]
+        json_path = base_path + ".json"
+
+        if not os.path.exists(json_path):
+            QMessageBox.warning(
+                self, "Dati mancanti",
+                "Non trovo il testo originale per questo file.\n"
+                "(Forse è stato generato con una versione vecchia o il file .json è stato cancellato)"
+            )
+            return
+
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                text_content = data.get("text", "")
+
+                # Emettiamo il segnale con il testo trovato
+                self.edit_requested.emit(text_content)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Errore", f"Impossibile leggere il file progetto:\n{e}")
+
     # --- LOGICA DI CANCELLAZIONE ---
     def delete_selected_file(self):
         index = self.list_view.currentIndex()
-        if not index.isValid():
-            QMessageBox.warning(self, "Attenzione", "Seleziona un file da eliminare.")
-            return
+        if not index.isValid(): return
 
-        # Otteniamo il percorso del file selezionato
         file_path = self.model.filePath(index)
         file_name = self.model.fileName(index)
 
-        # Controlliamo che sia un file e non una cartella (opzionale, ma sicuro)
-        if os.path.isdir(file_path):
-            QMessageBox.warning(self, "Errore", "Non puoi eliminare intere cartelle da qui.")
-            return
-
-        # Chiediamo conferma
         confirm = QMessageBox.question(
-            self,
-            "Conferma Eliminazione",
-            f"Sei sicuro di voler eliminare definitivamente:\n'{file_name}'?",
+            self, "Conferma Eliminazione",
+            f"Vuoi eliminare '{file_name}'?",
             QMessageBox.Yes | QMessageBox.No
         )
 
         if confirm == QMessageBox.Yes:
             try:
-                os.remove(file_path)
-                # Non serve ricaricare manualmente, QFileSystemModel osserva i cambiamenti!
-                print(f"[Library] Eliminato: {file_path}")
+                os.remove(file_path)  # Rimuove MP3
+
+                # Rimuove anche il JSON se esiste, per non lasciare spazzatura
+                base_path = os.path.splitext(file_path)[0]
+                json_path = base_path + ".json"
+                if os.path.exists(json_path):
+                    os.remove(json_path)
+
             except OSError as e:
-                QMessageBox.critical(self, "Errore", f"Impossibile eliminare il file.\nErrore: {e}")
+                QMessageBox.critical(self, "Errore", f"Errore eliminazione: {e}")
+
 
     # --- MENU TASTO DESTRO ---
     def show_context_menu(self, point):
@@ -120,6 +158,10 @@ class AudioLibraryView(QWidget):
         action_delete = QAction("Elimina", self)
         action_delete.triggered.connect(self.delete_selected_file)
         menu.addAction(action_delete)
+
+        # Azione Edita
+        action_edit = menu.addAction("✏️ Edita Testo")
+        action_edit.triggered.connect(self.load_text_for_editing)
 
         # Mostra il menu alla posizione del cursore
         menu.exec(QCursor.pos())

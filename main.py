@@ -40,6 +40,14 @@ class MainWindow(QMainWindow):
         self.editor_view = AudioEditorView()
         self.tabs.addTab(self.editor_view, "Editor Audio")
 
+        self.library_view.edit_requested.connect(self.on_edit_requested)
+
+    def on_edit_requested(self, text_content):
+        # 1. Imposta il testo nella vista TTS
+        self.tts_view.set_editor_content(text_content)
+
+        # 2. Cambia la tab attiva (0 è l'indice del Generatore TTS)
+        self.tabs.setCurrentIndex(0)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
