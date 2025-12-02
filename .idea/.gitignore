@@ -1,7 +1,22 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-
+# Cartella della tua libreria audio
 audio_library/
+*.mp3
+*.wav
+*.json
+
+# Cache di Python (non servono a nessuno)
+__pycache__/
+*.py[cod]
+
+# Ambienti virtuali (se usi venv)
+venv/
+env/
+.env
+
+# File temporanei IDE
+.vscode/
+.idea/
+
+# File di sistema
+.DS_Store
+Thumbs.db
