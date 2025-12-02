@@ -130,7 +130,6 @@ class TTSGeneratorView(QWidget):
             success = self.tts_engine.generate_dialogue(segments, full_path)
 
             if success:
-                QMessageBox.information(self, "Fatto", f"Salvato in Libreria:\n{safe_filename}.mp3")
                 # --- SALVIAMO IL TESTO ORIGINALE ---
                 project_data = {
                     "text": text,
