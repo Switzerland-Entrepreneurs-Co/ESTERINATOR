@@ -19,19 +19,6 @@ class AddCardWidget(BaseCardWidget):
         # Bottone grande "+" al centro
         add_btn = QPushButton("+")
         add_btn.setFixedSize(100, 100)
-        add_btn.setStyleSheet(f"""
-            QPushButton {{
-                font-size: 72px;
-                color: {self.color};
-                border-radius: 50px;
-                border: 2px dashed {self.color};
-                background: transparent;
-            }}
-            QPushButton:hover {{
-                background-color: {self.color}33;
-                cursor: pointer;
-            }}
-        """)
         add_btn.clicked.connect(lambda: self.add_requested.emit())
         layout.addWidget(add_btn, alignment=Qt.AlignCenter)
 

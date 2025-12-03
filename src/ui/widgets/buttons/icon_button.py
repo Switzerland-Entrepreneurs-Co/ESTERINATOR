@@ -21,15 +21,6 @@ class IconButton(QPushButton):
         if text != "":
             self.setText(text)
 
-        self.setStyleSheet("""
-            QPushButton {
-                background-color: transparent;
-                border: none;
-                text-align: left;
-                padding: 4px 8px;
-            }
-        """)
-
     def enterEvent(self, event):
         self.setIcon(self.icon_hover)
         super().enterEvent(event)

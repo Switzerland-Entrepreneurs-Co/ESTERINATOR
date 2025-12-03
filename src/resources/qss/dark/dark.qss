@@ -1,0 +1,257 @@
+/* dark_neokai.qss
+   - include dettagli per molti widget
+   - attenzione: per "animazioni" usare QPropertyAnimation
+*/
+
+/* ---------- Palette originale (ora inline) ----------
+@bg: #121221;
+@panel: #181824;
+@muted: #8E8EA6;
+@text: #E6E2F0;
+@glass: rgba(255,255,255,0.03);
+@accent_purple: #932191;
+@accent_fuchsia: #AD3D6F;
+@accent_orange: #E17327;
+@glow_purple: rgba(147,33,145,0.18);
+@glow_orange: rgba(225,115,39,0.14);
+------------------------------------------------------ */
+
+/* ---------- Global / base ---------- */
+QWidget, QMainWindow {
+    background-color: #121221;        /* @bg */
+    color: #E6E2F0;                   /* @text */
+}
+
+/* Panels / Cards */
+QFrame, QGroupBox, AudioCardWidget {
+    background-color: #181824;        /* @panel */
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 6px;
+}
+
+/* Title labels */
+AudioCardWidget QLabel#title, QLabel.title {
+    color: #E6E2F0;                   /* @text */
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Divider */
+QFrame[role="divider"] {
+    background-color: rgba(255,255,255,0.03);  /* @glass */
+    min-height: 1px;
+}
+
+/* ---------- Buttons ---------- */
+QPushButton {
+    background-color: transparent;
+    color: #E6E2F0;                   /* @text */
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 8px 12px;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QPushButton[flat="true"] {
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: rgba(255,255,255,0.02);
+    border-color: rgba(173,61,111,0.22);   /* @accent_fuchsia (glow) */
+}
+
+QPushButton:pressed {
+    background-color: rgba(0,0,0,0.12);
+}
+
+/* Accent buttons */
+QPushButton[accent="purple"] {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #932191,          /* @accent_purple */
+        stop:1 #AD3D6F           /* @accent_fuchsia */
+    );
+    color: #fff;
+    border: none;
+}
+
+QPushButton[accent="orange"] {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 #E17327,          /* @accent_orange */
+        stop:1 #FF934F
+    );
+    color: #111;
+    border: none;
+}
+
+/* Icon Buttons */
+QToolButton, IconButton, .IconButton {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    min-width: 34px;
+    min-height: 34px;
+    border-radius: 6px;
+}
+
+QToolButton:hover, IconButton:hover {
+    background-color: rgba(255,255,255,0.02);
+}
+
+/* ---------- Inputs ---------- */
+QLineEdit, QComboBox, QTextEdit, QPlainTextEdit {
+    background-color: rgba(255,255,255,0.015);   /* @glass but weaker */
+    border: 1px solid rgba(255,255,255,0.035);
+    padding: 8px;
+    border-radius: 6px;
+    color: #E6E2F0;                 /* @text */
+}
+
+QLineEdit:focus, QTextEdit:focus, QComboBox:focus {
+    border: 1px solid #932191;      /* @accent_purple */
+    outline: none;
+}
+
+/* ComboBox arrow */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: none;
+}
+
+/* ---------- Tabs ---------- */
+QTabWidget::pane {
+    border: none;
+    background: transparent;
+}
+
+QTabBar::tab {
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #8E8EA6;                 /* @muted */
+    margin-right: 6px;
+}
+
+QTabBar::tab:selected {
+    color: #E6E2F0;                 /* @text */
+    background-color: rgba(147,33,145,0.08);   /* @glow_purple dim */
+    border: 1px solid rgba(147,33,145,0.16);   /* @glow_purple mid */
+}
+
+/* ---------- Menus / Toolbars ---------- */
+QMenuBar {
+    background: transparent;
+}
+
+QMenu {
+    background-color: #181824;      /* @panel */
+    color: #E6E2F0;                 /* @text */
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+QToolBar {
+    background: transparent;
+    border: none;
+}
+
+/* ---------- Scrollbar ---------- */
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 8px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(
+        x1:0,y1:0,x2:1,y2:1,
+        stop:0 rgba(255,255,255,0.06),
+        stop:1 rgba(255,255,255,0.03)
+    );
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    height: 0;
+}
+
+/* ---------- Tables / Views ---------- */
+QHeaderView::section {
+    background-color: transparent;
+    color: #8E8EA6;                 /* @muted */
+    padding: 8px;
+    border: none;
+}
+
+QTableView {
+    gridline-color: rgba(255,255,255,0.02);
+}
+
+/* ---------- Checkboxes / Radios ---------- */
+QCheckBox, QRadioButton {
+    color: #E6E2F0;                 /* @text */
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    background-color: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    width: 16px;
+    height: 16px;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #932191;      /* @accent_purple */
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ---------- Progress / Slider ---------- */
+QProgressBar {
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+    color: #E6E2F0;                 /* @text */
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(
+        x1:0,y1:0,x2:1,y2:0,
+        stop:0 #932191,             /* @accent_purple */
+        stop:1 #E17327              /* @accent_orange */
+    );
+}
+
+QSlider::groove:horizontal {
+    height: 6px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    width: 14px;
+    height: 14px;
+    margin-top: -4px;
+    margin-bottom: -4px;
+    border-radius: 7px;
+    background: #932191;            /* @accent_purple */
+}
+
+/* ---------- Tooltip ---------- */
+QToolTip {
+    background-color: #0f0b15;
+    color: #E6E2F0;                 /* @text */
+    border: 1px solid rgba(147,33,145,0.2); /* @glow_purple border */
+    padding: 6px;
+    border-radius: 6px;
+}
+
+/* ---------- Glow classes ---------- */
+*[glow="purple"] {
+    border: 1px solid rgba(147,33,145,0.14);     /* @glow_purple */
+    background-clip: padding;
+}
+
+*[glow="orange"] {
+    border: 1px solid rgba(225,115,39,0.10);     /* @glow_orange */
+}

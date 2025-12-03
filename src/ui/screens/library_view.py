@@ -24,7 +24,6 @@ class AudioLibraryView(QWidget):
         main_layout.setSpacing(10)
 
         header = QLabel(f"📂 Libreria Audio: {self.library_path}")
-        header.setStyleSheet("color: gray; font-size: 11px;")
         main_layout.addWidget(header)
 
         # --- Scroll area con card ---

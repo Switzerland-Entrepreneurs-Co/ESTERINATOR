@@ -1,0 +1,32 @@
+/* IconButton - stile per il bottone icona con hover */
+
+/* Stile base */
+IconButton, QToolButton {
+    background-color: transparent;
+    border: none;
+    padding: 6px;
+    min-width: 34px;
+    min-height: 34px;
+    border-radius: 6px;
+    color: #E6E2F0; /* testo chiaro */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover */
+IconButton:hover, QToolButton:hover {
+    background-color: rgba(147, 33, 145, 0.12); /* viola trasparente */
+}
+
+/* Pressed */
+IconButton:pressed, QToolButton:pressed {
+    background-color: rgba(147, 33, 145, 0.25);
+}
+
+/* Se ha testo, allinea l'icona e il testo */
+IconButton[text]:not(:empty) {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}

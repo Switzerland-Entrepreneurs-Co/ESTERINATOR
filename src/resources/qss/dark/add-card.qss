@@ -1,0 +1,43 @@
+/* AddCardWidget - card per aggiunta con bottone centrale "+" */
+
+/* Card base (eredita da BaseCardWidget) */
+AddCardWidget {
+    background-color: #1E1B2D; /* leggermente più chiaro */
+    border: 2px dashed rgba(225, 115, 39, 0.4); /* bordo arancio tratteggiato */
+    border-radius: 12px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Hover sulla card */
+AddCardWidget:hover {
+    border-color: #E17327; /* arancio vivo */
+    background-color: rgba(225, 115, 39, 0.12);
+}
+
+/* Bottone "+" grande */
+AddCardWidget QPushButton {
+    font-size: 48px;
+    font-weight: 900;
+    color: #E17327; /* arancio */
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover bottone "+" */
+AddCardWidget QPushButton:hover {
+    background-color: rgba(225, 115, 39, 0.25);
+    color: #FFF;
+}
+
+/* Pressed bottone "+" */
+AddCardWidget QPushButton:pressed {
+    background-color: rgba(225, 115, 39, 0.5);
+    color: #FFF;
+}

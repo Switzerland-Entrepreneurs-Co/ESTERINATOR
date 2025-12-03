@@ -25,18 +25,10 @@ class AudioCardWidget(BaseCardWidget):
         layout.setSpacing(15)
         layout.setAlignment(Qt.AlignCenter)
 
-        # Sfondo scuro con bordo netto (spigoloso)
-        self.setStyleSheet(f"""
-            background-color: #282A3A;  /* sfondo neokai scuro */
-            border: 2px solid #EEEEEE;  /* bordo grigio chiaro (leggermente più chiaro del testo) */
-            border-radius: 4px;
-        """)
-
         # Icona centrale da file
         icon_path = "src/resources/icons/cards/normal/music_note.png"
         icon_label = QLabel()
         icon_label.setAlignment(Qt.AlignCenter)
-        icon_label.setStyleSheet("border: none;")
         pixmap = QPixmap(icon_path)
         if pixmap.isNull():
             print(f"Errore: immagine non trovata {icon_path}")
@@ -51,18 +43,11 @@ class AudioCardWidget(BaseCardWidget):
         title_label.setObjectName("title")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setWordWrap(True)
-        title_label.setStyleSheet("""
-            color: #D3D3D3;  /* grigio chiaro */
-            font-weight: bold;
-            font-size: 16px;
-            border: none;
-        """)
         layout.addWidget(title_label)
 
         # Linea divisoria sottile chiara
         divider = QFrame()
         divider.setFixedHeight(1)
-        divider.setStyleSheet("background-color: #4A4A6A;")  # grigio/blu scuro
         layout.addWidget(divider)
 
         # Layout pulsanti
