@@ -1,181 +1,137 @@
-import json
-import os
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QListView, QLabel,
-    QPushButton, QHBoxLayout, QMessageBox,
-    QFileSystemModel, QMenu, QAbstractItemView
+    QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout,
+    QMessageBox, QScrollArea, QGridLayout
 )
 from PySide6.QtCore import QUrl, Qt, Signal
-from PySide6.QtGui import QDesktopServices, QCursor, QAction
+from PySide6.QtGui import QDesktopServices
+
+from src.ui.widgets.cards.add_card import AddCardWidget
+from src.ui.widgets.cards.audio_card import AudioCardWidget
+import os
+import json
 
 
 class AudioLibraryView(QWidget):
-    # Creiamo un segnale che dice: "Ehi Main, qualcuno vuole editare questo testo!"
     edit_requested = Signal(str)
 
     def __init__(self, library_path):
         super().__init__()
-        self.library_path = library_path
-
-        # Assicuriamoci che il path sia assoluto
-        if not os.path.isabs(self.library_path):
-            self.library_path = os.path.abspath(self.library_path)
-
+        self.library_path = os.path.abspath(library_path)
         self.init_ui()
 
     def init_ui(self):
-        layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(10)
 
-        # --- Intestazione ---
         header = QLabel(f"📂 Libreria Audio: {self.library_path}")
         header.setStyleSheet("color: gray; font-size: 11px;")
-        layout.addWidget(header)
+        main_layout.addWidget(header)
 
-        # --- Modello File System ---
-        self.model = QFileSystemModel()
-        self.model.setRootPath(self.library_path)
-        # Filtro per vedere solo file audio
-        self.model.setNameFilters(["*.mp3", "*.wav"])
-        self.model.setNameFilterDisables(False)
+        # --- Scroll area con card ---
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
 
-        # --- Vista Lista ---
-        self.list_view = QListView()
-        self.list_view.setModel(self.model)
-        self.list_view.setRootIndex(self.model.index(self.library_path))
-        self.list_view.setAlternatingRowColors(True)
-        self.list_view.setSelectionMode(QAbstractItemView.SingleSelection)  # Una selezione alla volta per sicurezza
+        self.container = QWidget()
+        self.grid = QGridLayout()
+        self.grid.setSpacing(20)
+        self.grid.setContentsMargins(10, 10, 10, 10)
+        self.grid.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        self.container.setLayout(self.grid)
 
-        # Eventi
-        self.list_view.doubleClicked.connect(self.play_file)
+        self.scroll.setWidget(self.container)
+        main_layout.addWidget(self.scroll)
 
-        # ABILITIAMO IL TASTO DESTRO (Context Menu)
-        self.list_view.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.list_view.customContextMenuRequested.connect(self.show_context_menu)
+        # --- Bottoni ---
+        btns = QHBoxLayout()
 
-        layout.addWidget(self.list_view)
+        refresh_btn = QPushButton("Aggiorna")
+        refresh_btn.clicked.connect(self.refresh_view)
+        btns.addWidget(refresh_btn)
 
-        # --- Pulsanti Azione ---
-        btn_layout = QHBoxLayout()
+        open_btn = QPushButton("Apri Cartella")
+        open_btn.clicked.connect(self.open_system_folder)
+        btns.addWidget(open_btn)
 
-        self.btn_open_folder = QPushButton("Apri Cartella")
-        self.btn_open_folder.clicked.connect(self.open_system_folder)
-        btn_layout.addWidget(self.btn_open_folder)
+        main_layout.addLayout(btns)
+        self.setLayout(main_layout)
 
-        self.btn_refresh = QPushButton("Aggiorna")
-        self.btn_refresh.clicked.connect(self.refresh_view)
-        btn_layout.addWidget(self.btn_refresh)
+        self.refresh_view()
 
-        self.btn_edit = QPushButton("✏️ Edita Testo")
-        self.btn_edit.setStyleSheet("background-color: #FFF3E0; color: #E65100; font-weight: bold;")
-        self.btn_edit.clicked.connect(self.load_text_for_editing)
-        btn_layout.addWidget(self.btn_edit)
+    def refresh_view(self):
+        # Pulisci la griglia
+        while self.grid.count():
+            item = self.grid.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
 
-        # PULSANTE ELIMINA (Rosso per attenzione)
-        self.btn_delete = QPushButton("Elimina File")
-        self.btn_delete.setStyleSheet("background-color: #ffcccc; color: #cc0000; font-weight: bold;")
-        self.btn_delete.clicked.connect(self.delete_selected_file)
-        btn_layout.addWidget(self.btn_delete)
+        columns = 5  # Numero colonne nella griglia
+        row = 0
+        col = 0
 
-        layout.addLayout(btn_layout)
+        # Aggiungi prima la card per creare nuovo file
+        add_card = AddCardWidget(color="#FF7AAC")
+        # TODO: Fai in modo che apra la TTSView senza testo
+        self.grid.addWidget(add_card, row, col)
 
-        self.setLayout(layout)
+        col += 1
+        if col >= columns:
+            col = 0
+            row += 1
 
-    # --- LOGICA EDITA ---
-    def load_text_for_editing(self):
-        index = self.list_view.currentIndex()
-        if not index.isValid():
-            QMessageBox.warning(self, "Attenzione", "Seleziona un file da editare.")
-            return
+        # Poi aggiungi le card audio
+        for fname in os.listdir(self.library_path):
+            if fname.lower().endswith((".wav", ".mp3")):
+                full_path = os.path.join(self.library_path, fname)
+                color = "#FF7AAC"
 
-        mp3_path = self.model.filePath(index)
+                card = AudioCardWidget(full_path, color=color)
 
-        # Cerchiamo il file JSON corrispondente
-        # Se il file è "audio.mp3", cerchiamo "audio.json"
-        base_path = os.path.splitext(mp3_path)[0]
-        json_path = base_path + ".json"
+                card.play_requested.connect(self.play_file)
+                card.delete_requested.connect(self.delete_file)
+                card.edit_requested.connect(self.load_text_for_editing)
 
-        if not os.path.exists(json_path):
-            QMessageBox.warning(
-                self, "Dati mancanti",
-                "Non trovo il testo originale per questo file.\n"
-                "(Forse è stato generato con una versione vecchia o il file .json è stato cancellato)"
-            )
-            return
+                self.grid.addWidget(card, row, col)
 
-        try:
-            with open(json_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                text_content = data.get("text", "")
+                col += 1
+                if col >= columns:
+                    col = 0
+                    row += 1
 
-                # Emettiamo il segnale con il testo trovato
-                self.edit_requested.emit(text_content)
+    def play_file(self, file_path):
+        QDesktopServices.openUrl(QUrl.fromLocalFile(file_path))
 
-        except Exception as e:
-            QMessageBox.critical(self, "Errore", f"Impossibile leggere il file progetto:\n{e}")
-
-    # --- LOGICA DI CANCELLAZIONE ---
-    def delete_selected_file(self):
-        index = self.list_view.currentIndex()
-        if not index.isValid(): return
-
-        file_path = self.model.filePath(index)
-        file_name = self.model.fileName(index)
+    def delete_file(self, file_path):
+        name = os.path.basename(file_path)
 
         confirm = QMessageBox.question(
             self, "Conferma Eliminazione",
-            f"Vuoi eliminare '{file_name}'?",
+            f"Vuoi '{name}'?",
             QMessageBox.Yes | QMessageBox.No
         )
-
-        if confirm == QMessageBox.Yes:
-            try:
-                os.remove(file_path)  # Rimuove MP3
-
-                # Rimuove anche il JSON se esiste, per non lasciare spazzatura
-                base_path = os.path.splitext(file_path)[0]
-                json_path = base_path + ".json"
-                if os.path.exists(json_path):
-                    os.remove(json_path)
-
-            except OSError as e:
-                QMessageBox.critical(self, "Errore", f"Errore eliminazione: {e}")
-
-
-    # --- MENU TASTO DESTRO ---
-    def show_context_menu(self, point):
-        index = self.list_view.indexAt(point)
-        if not index.isValid():
+        if confirm != QMessageBox.Yes:
             return
 
-        menu = QMenu(self)
+        try:
+            os.remove(file_path)
+            json_path = os.path.splitext(file_path)[0] + ".json"
+            if os.path.exists(json_path):
+                os.remove(json_path)
+            self.refresh_view()
+        except Exception as e:
+            QMessageBox.critical(self, "Errore", str(e))
 
-        # Azione Play
-        action_play = QAction("Riproduci", self)
-        action_play.triggered.connect(lambda: self.play_file(index))
-        menu.addAction(action_play)
+    def load_text_for_editing(self, file_path):
+        json_path = os.path.splitext(file_path)[0] + ".json"
 
-        # Azione Elimina
-        action_delete = QAction("Elimina", self)
-        action_delete.triggered.connect(self.delete_selected_file)
-        menu.addAction(action_delete)
+        if not os.path.exists(json_path):
+            QMessageBox.warning(self, "Dati mancanti", "File testo (.json) inesistente.")
+            return
 
-        # Azione Edita
-        action_edit = menu.addAction("✏️ Edita Testo")
-        action_edit.triggered.connect(self.load_text_for_editing)
-
-        # Mostra il menu alla posizione del cursore
-        menu.exec(QCursor.pos())
-
-    # --- ALTRE FUNZIONI ---
-    def play_file(self, index):
-        file_path = self.model.filePath(index)
-        QDesktopServices.openUrl(QUrl.fromLocalFile(file_path))
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            text = data.get("text", "")
+            self.edit_requested.emit(text)
 
     def open_system_folder(self):
         QDesktopServices.openUrl(QUrl.fromLocalFile(self.library_path))
-
-    def refresh_view(self):
-        # Reset del path per forzare refresh
-        self.model.setRootPath("")
-        self.model.setRootPath(self.library_path)
-        self.list_view.setRootIndex(self.model.index(self.library_path))
