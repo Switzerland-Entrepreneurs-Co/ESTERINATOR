@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         base_dir = os.path.dirname(base_dir)
         base_dir = os.path.dirname(base_dir)
+        base_dir = os.path.dirname(base_dir)
         self.library_path = os.path.join(base_dir, "audio_library")
 
         if not os.path.exists(self.library_path):

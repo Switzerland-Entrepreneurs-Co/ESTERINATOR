@@ -13,6 +13,9 @@ venv/
 env/
 .env
 
+# Configurazioni IntelliJ
+.idea/
+
 # File temporanei IDE
 .vscode/
 .idea/
