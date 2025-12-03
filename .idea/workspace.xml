@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcc5d326-ef2c-479d-8371-be90b074fd07" name="Changes" comment="piccolo refactor">
-      <change afterPath="$PROJECT_DIR$/src/resources/icons/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/screens/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/main_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/widgets/buttons/icon_button.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/widgets/buttons/icon_button.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +179,7 @@
       <workItem from="1764748931473" duration="367000" />
       <workItem from="1764749312771" duration="7628000" />
       <workItem from="1764758112560" duration="240000" />
-      <workItem from="1764758448221" duration="51000" />
+      <workItem from="1764758448221" duration="643000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -289,7 +289,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="piccolo refactor" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ESTERINATOR$main.coverage" NAME="main Coverage Results" MODIFIED="1764758479947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ESTERINATOR$main.coverage" NAME="main Coverage Results" MODIFIED="1764758756247" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ESTERINATOR$tts_view.coverage" NAME="tts_view Coverage Results" MODIFIED="1764678924548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
     <SUITE FILE_PATH="coverage/ESTERINATOR$tts_engine.coverage" NAME="tts_engine Coverage Results" MODIFIED="1764677621124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/core" />
   </component>
