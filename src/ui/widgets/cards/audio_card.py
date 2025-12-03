@@ -12,11 +12,11 @@ class AudioCardWidget(BaseCardWidget):
     delete_requested = Signal(str)
     edit_requested = Signal(str)
 
-    def __init__(self, file_path: str, color: str = "#FF6A3D"):
+    def __init__(self, file_path: str, color: str = "#932191"):  # default viola
         super().__init__()
         self.file_path = file_path
         self.color = color
-        self.setMinimumSize(200, 200)  # utile per debug visibilità widget
+        self.setMinimumSize(200, 200)
         self.init_ui()
 
     def init_ui(self):
@@ -25,8 +25,15 @@ class AudioCardWidget(BaseCardWidget):
         layout.setSpacing(15)
         layout.setAlignment(Qt.AlignCenter)
 
+        # Sfondo scuro con bordo netto (spigoloso)
+        self.setStyleSheet(f"""
+            background-color: #282A3A;  /* sfondo neokai scuro */
+            border: 2px solid #EEEEEE;  /* bordo grigio chiaro (leggermente più chiaro del testo) */
+            border-radius: 4px;
+        """)
+
         # Icona centrale da file
-        icon_path = "src/resources/icons/cards/music_note.png"
+        icon_path = "src/resources/icons/cards/normal/music_note.png"
         icon_label = QLabel()
         icon_label.setAlignment(Qt.AlignCenter)
         icon_label.setStyleSheet("border: none;")
@@ -38,19 +45,24 @@ class AudioCardWidget(BaseCardWidget):
             icon_label.setPixmap(pixmap)
         layout.addWidget(icon_label)
 
-        # Nome file senza path
+        # Nome file senza path - testo grigio chiaro
         file_name = os.path.basename(self.file_path)
         title_label = QLabel(file_name)
         title_label.setObjectName("title")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setWordWrap(True)
-        title_label.setStyleSheet("color: #333333; font-weight: bold; font-size: 16px; border: none;")
+        title_label.setStyleSheet("""
+            color: #D3D3D3;  /* grigio chiaro */
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+        """)
         layout.addWidget(title_label)
 
-        # Linea divisoria sottile
+        # Linea divisoria sottile chiara
         divider = QFrame()
         divider.setFixedHeight(1)
-        divider.setStyleSheet("background-color: #E5E5E5;")
+        divider.setStyleSheet("background-color: #4A4A6A;")  # grigio/blu scuro
         layout.addWidget(divider)
 
         # Layout pulsanti
@@ -58,15 +70,27 @@ class AudioCardWidget(BaseCardWidget):
         btn_layout.setSpacing(30)
         btn_layout.setAlignment(Qt.AlignCenter)
 
-        play_btn = IconButton("src/resources/icons/cards/play.png", "Ascolta audio", color=self.color)
+        play_btn = IconButton(
+            icon_path_normal="src/resources/icons/cards/normal/play.png",
+            icon_path_hover="src/resources/icons/cards/hover/play.png",
+            tooltip="Ascolta"
+        )
         play_btn.clicked.connect(lambda: self.play_requested.emit(self.file_path))
         btn_layout.addWidget(play_btn)
 
-        edit_btn = IconButton("src/resources/icons/cards/edit.png", "Modifica trascrizione", color=self.color)
+        edit_btn = IconButton(
+            icon_path_normal="src/resources/icons/cards/normal/edit.png",
+            icon_path_hover="src/resources/icons/cards/hover/edit.png",
+            tooltip="Modifica"
+        )
         edit_btn.clicked.connect(lambda: self.edit_requested.emit(self.file_path))
         btn_layout.addWidget(edit_btn)
 
-        delete_btn = IconButton("src/resources/icons/cards/delete.png", "Elimina file", color=self.color)
+        delete_btn = IconButton(
+            icon_path_normal="src/resources/icons/cards/normal/delete.png",
+            icon_path_hover="src/resources/icons/cards/hover/delete.png",
+            tooltip="Elimina file"
+        )
         delete_btn.clicked.connect(lambda: self.delete_requested.emit(self.file_path))
         btn_layout.addWidget(delete_btn)
 
