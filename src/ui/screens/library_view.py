@@ -70,7 +70,7 @@ class AudioLibraryView(QWidget):
         col = 0
 
         # Aggiungi prima la card per creare nuovo file
-        add_card = AddCardWidget(color="#FF7AAC")
+        add_card = AddCardWidget()
         # TODO: Fai in modo che apra la TTSView senza testo
         self.grid.addWidget(add_card, row, col)
 
@@ -83,9 +83,8 @@ class AudioLibraryView(QWidget):
         for fname in os.listdir(self.library_path):
             if fname.lower().endswith((".wav", ".mp3")):
                 full_path = os.path.join(self.library_path, fname)
-                color = "#FF7AAC"
 
-                card = AudioCardWidget(full_path, color=color)
+                card = AudioCardWidget(full_path)
 
                 card.play_requested.connect(self.play_file)
                 card.delete_requested.connect(self.delete_file)

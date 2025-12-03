@@ -8,4 +8,4 @@ class BaseCardWidget(QFrame):
     """
     def __init__(self, width=160, height=180):
         super().__init__()
-        self.setFixedSize(width, height)
+        self.setMinimumSize(width, height)

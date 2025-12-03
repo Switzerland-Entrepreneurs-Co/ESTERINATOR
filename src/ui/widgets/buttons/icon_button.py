@@ -21,6 +21,8 @@ class IconButton(QPushButton):
         if text != "":
             self.setText(text)
 
+        self.setProperty("class", "IconButton")
+
     def enterEvent(self, event):
         self.setIcon(self.icon_hover)
         super().enterEvent(event)

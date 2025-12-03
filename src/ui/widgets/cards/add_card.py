@@ -6,12 +6,12 @@ from PySide6.QtCore import Signal, Qt
 class AddCardWidget(BaseCardWidget):
     add_requested = Signal()
 
-    def __init__(self, color: str = "#FF6A3D"):
+    def __init__(self):
         super().__init__()
-        self.color = color
         self.init_ui()
 
     def init_ui(self):
+        self.setProperty("class", "AddCardWidget")
         layout = QVBoxLayout()
         layout.setContentsMargins(15, 15, 15, 15)
         layout.setAlignment(Qt.AlignCenter)
