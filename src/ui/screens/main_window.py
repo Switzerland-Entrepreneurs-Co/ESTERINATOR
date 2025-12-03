@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import QMainWindow, QTabWidget
-from src.ui.library_view import AudioLibraryView
+from src.ui.screens.library_view import AudioLibraryView
 
 import os
 
 # Import corretti basati sui nuovi nomi dei file (snake_case)
-from src.ui.tts_view import TTSGeneratorView
-from src.ui.editor_view import AudioEditorView
+from src.ui.screens.tts.tts_view import TTSGeneratorView
+from src.ui.screens.editor_view import AudioEditorView
 
 
 class MainWindow(QMainWindow):

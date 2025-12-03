@@ -44,6 +44,7 @@ class AudioLibraryView(QWidget):
         # --- Bottoni ---
         btns = QHBoxLayout()
 
+        # TODO: Rimuovere la necessità di questo schifo (con un Observer?)
         refresh_btn = QPushButton("Aggiorna")
         refresh_btn.clicked.connect(self.refresh_view)
         btns.addWidget(refresh_btn)
@@ -106,7 +107,7 @@ class AudioLibraryView(QWidget):
 
         confirm = QMessageBox.question(
             self, "Conferma Eliminazione",
-            f"Vuoi '{name}'?",
+            f"Vuoi davvero eliminare '{name}'?",
             QMessageBox.Yes | QMessageBox.No
         )
         if confirm != QMessageBox.Yes:

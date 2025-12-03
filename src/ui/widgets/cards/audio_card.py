@@ -1,8 +1,9 @@
 import os
-
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Signal, Qt, QSize
+from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QFrame, QPushButton, QHBoxLayout
 
+from src.ui.widgets.buttons.icon_button import IconButton
 from src.ui.widgets.cards.base_card import BaseCardWidget
 
 
@@ -15,6 +16,7 @@ class AudioCardWidget(BaseCardWidget):
         super().__init__()
         self.file_path = file_path
         self.color = color
+        self.setMinimumSize(200, 200)  # utile per debug visibilità widget
         self.init_ui()
 
     def init_ui(self):
@@ -23,10 +25,17 @@ class AudioCardWidget(BaseCardWidget):
         layout.setSpacing(15)
         layout.setAlignment(Qt.AlignCenter)
 
-        # Icona centrale: nota musicale Unicode 🎵
-        icon_label = QLabel("🎵")
+        # Icona centrale da file
+        icon_path = "src/resources/icons/cards/music_note.png"
+        icon_label = QLabel()
         icon_label.setAlignment(Qt.AlignCenter)
-        icon_label.setStyleSheet("font-size: 72px;")
+        icon_label.setStyleSheet("border: none;")
+        pixmap = QPixmap(icon_path)
+        if pixmap.isNull():
+            print(f"Errore: immagine non trovata {icon_path}")
+        else:
+            pixmap = pixmap.scaled(72, 72, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            icon_label.setPixmap(pixmap)
         layout.addWidget(icon_label)
 
         # Nome file senza path
@@ -35,7 +44,7 @@ class AudioCardWidget(BaseCardWidget):
         title_label.setObjectName("title")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setWordWrap(True)
-        title_label.setStyleSheet(f"color: #333333; font-weight: bold; font-size: 16px;")
+        title_label.setStyleSheet("color: #333333; font-weight: bold; font-size: 16px; border: none;")
         layout.addWidget(title_label)
 
         # Linea divisoria sottile
@@ -44,32 +53,22 @@ class AudioCardWidget(BaseCardWidget):
         divider.setStyleSheet("background-color: #E5E5E5;")
         layout.addWidget(divider)
 
-        # Pulsanti play, edit, delete
+        # Layout pulsanti
         btn_layout = QHBoxLayout()
         btn_layout.setSpacing(30)
         btn_layout.setAlignment(Qt.AlignCenter)
 
-        # Play button ▶
-        play_btn = QPushButton("▶")
-        play_btn.setToolTip("Ascolta audio")
-        play_btn.setStyleSheet(f"color: {self.color}; font-size: 24px; background: none; border: none;")
+        play_btn = IconButton("src/resources/icons/cards/play.png", "Ascolta audio", color=self.color)
         play_btn.clicked.connect(lambda: self.play_requested.emit(self.file_path))
         btn_layout.addWidget(play_btn)
 
-        # Edit button ✏
-        edit_btn = QPushButton("✏")
-        edit_btn.setToolTip("Modifica trascrizione")
-        edit_btn.setStyleSheet(f"color: {self.color}; font-size: 24px; background: none; border: none;")
+        edit_btn = IconButton("src/resources/icons/cards/edit.png", "Modifica trascrizione", color=self.color)
         edit_btn.clicked.connect(lambda: self.edit_requested.emit(self.file_path))
         btn_layout.addWidget(edit_btn)
 
-        # Delete button 🗑
-        delete_btn = QPushButton("🗑")
-        delete_btn.setToolTip("Elimina file")
-        delete_btn.setStyleSheet(f"color: {self.color}; font-size: 24px; background: none; border: none;")
+        delete_btn = IconButton("src/resources/icons/cards/delete.png", "Elimina file", color=self.color)
         delete_btn.clicked.connect(lambda: self.delete_requested.emit(self.file_path))
         btn_layout.addWidget(delete_btn)
 
         layout.addLayout(btn_layout)
-
         self.setLayout(layout)

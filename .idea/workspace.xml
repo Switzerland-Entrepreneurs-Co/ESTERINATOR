@@ -5,15 +5,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcc5d326-ef2c-479d-8371-be90b074fd07" name="Changes" comment="piccolo refactor">
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/add_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/audio_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/base_card.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ESTERINATOR.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ESTERINATOR.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/file_manager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/cards/delete.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/cards/edit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/cards/music_note.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/cards/play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/da.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/de.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/el.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/en.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/es.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/fi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/fr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ga.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/he.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/hi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/hu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/it.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ja.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ko.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/nl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/no.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/pl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/pt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ro.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/ru.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/th.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/tr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/uk.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/icons/flags/zh.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/screens/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/screens/tts/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/screens/tts/components/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/screens/tts/components/language_selector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/screens/tts/components/voice_selector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/widgets/buttons/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/widgets/buttons/icon_button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/library_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/library_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/editor_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/library_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/library_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/main_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/tts_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/tts/tts_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/widgets/cards/audio_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/widgets/cards/audio_card.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +107,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nanah\Desktop\ESTERINATOR\src\ui\screens" />
+      <recent name="C:\Users\nanah\Desktop\ESTERINATOR\src\ui\tts-view" />
       <recent name="C:\Users\nanah\Desktop\ESTERINATOR\src\ui\widgets\cards" />
       <recent name="C:\Users\nanah\Desktop\ESTERINATOR\src\ui\widgets" />
     </key>
@@ -136,7 +174,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/ui/tts_view.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\nanah\Desktop\ESTERINATOR\src\ui\tts-view\tts_view.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -180,7 +218,7 @@
       <workItem from="1764683066348" duration="2391000" />
       <workItem from="1764686623670" duration="305000" />
       <workItem from="1764748931473" duration="367000" />
-      <workItem from="1764749312771" duration="1855000" />
+      <workItem from="1764749312771" duration="7239000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -290,7 +328,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="piccolo refactor" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ESTERINATOR$main.coverage" NAME="main Coverage Results" MODIFIED="1764751154892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ESTERINATOR$main.coverage" NAME="main Coverage Results" MODIFIED="1764756851125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ESTERINATOR$tts_view.coverage" NAME="tts_view Coverage Results" MODIFIED="1764678924548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/ui" />
     <SUITE FILE_PATH="coverage/ESTERINATOR$tts_engine.coverage" NAME="tts_engine Coverage Results" MODIFIED="1764677621124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/core" />
   </component>
