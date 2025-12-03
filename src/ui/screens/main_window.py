@@ -34,10 +34,9 @@ class MainWindow(QMainWindow):
         sidebar = QWidget()
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setAlignment(Qt.AlignTop)
-        sidebar.setStyleSheet("background-color: #2E3440;")  # esempio colore scuro blu/grigio
         sidebar.setFixedWidth(200)
 
-        # Logo (puoi sostituirlo con una QLabel con immagine)
+        # Logo
         logo_label = QLabel()
         pixmap = QPixmap("src/resources/icons/logo.png")
         logo_label.setPixmap(pixmap.scaled(150, 150, Qt.KeepAspectRatio, Qt.SmoothTransformation))

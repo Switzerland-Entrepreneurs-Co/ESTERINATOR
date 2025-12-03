@@ -26,7 +26,6 @@ class TTSGeneratorView(QWidget):
         layout = QVBoxLayout()
 
         lbl_info = QLabel("Generatore Dialoghi Neurali (Online)")
-        lbl_info.setStyleSheet("font-weight: bold; color: #2196F3;")
         layout.addWidget(lbl_info)
 
         controls_layout = QHBoxLayout()
@@ -50,7 +49,6 @@ class TTSGeneratorView(QWidget):
         layout.addWidget(self.text_edit)
 
         self.btn_generate = QPushButton("Salva e Genera Dialogo")
-        self.btn_generate.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold; padding: 10px;")
         self.btn_generate.clicked.connect(self.generate_dialogue)
         layout.addWidget(self.btn_generate)
 

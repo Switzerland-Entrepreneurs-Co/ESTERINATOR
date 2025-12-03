@@ -7,7 +7,6 @@ class AudioEditorView(QWidget):
         layout = QVBoxLayout()
 
         label = QLabel("Audio Editor Waveform View (Placeholder)")
-        label.setStyleSheet("border: 2px dashed #666; padding: 50px;")
 
         btn_load = QPushButton("Carica Traccia (To Do)")
 
