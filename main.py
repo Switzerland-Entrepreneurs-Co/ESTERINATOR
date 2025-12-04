@@ -12,7 +12,7 @@ if __name__ == "__main__":
     app.setStyleSheet(css)
 
     # Pre-caricamento di risorse prima di lanciare l'applicazione
-    File
+    
 
     window = MainWindow()
     window.show()

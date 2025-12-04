@@ -66,6 +66,7 @@ class TTSGeneratorView(QWidget):
         # Connetti cambio lingua
         self.language_combo.currentIndexChanged.connect(self.on_language_changed)
 
+    # TODO: è qua la roba delle vociiiiiiiiiiiii
     def load_voices(self):
         voices = self.tts_engine.get_voices()
         self.voice_combo.set_voices(voices)

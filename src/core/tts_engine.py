@@ -1,11 +1,16 @@
 import asyncio
 import os
 import edge_tts
+import re
 
-
+# Adesso è un singleton
 class TTSEngine:
     def __init__(self):
         self.voices = []
+        self.alias_to_voice = {}
+
+        self.keywords = []
+        self.pattern = re.compile(r"\s*([a-zA-Z])\s*->\s*([a-zA-Z])\s*")
         # Carica le voci all'avvio
         asyncio.run(self._load_voices_async())
 
@@ -49,7 +54,7 @@ class TTSEngine:
                 })
 
             # Ordiniamo: Prima le italiane, poi le altre
-            self.voices.sort(key=lambda x: (x['locale'] != 'it-IT', x['name']))
+            #self.voices.sort(key=lambda x: (x['locale'] != 'it-IT', x['name']))
 
         except Exception as e:
             print(f"[TTSEngine] Errore caricamento voci: {e}")
@@ -67,6 +72,7 @@ class TTSEngine:
             print(f"[TTSEngine] Errore async: {e}")
             return False
 
+    # Qui viene generato il dialogo, e nessuno lo avrebbe mai detto basandosi sul nome del metodo
     def generate_dialogue(self, segments, final_output_path):
         """
         Genera il dialogo salvandolo esattamente in final_output_path.
@@ -121,3 +127,9 @@ class TTSEngine:
         except Exception as e:
             print(f"[MERGE] Errore: {e}")
             return False
+
+# istanza unica
+_tts_engine = TTSEngine()
+
+def tts_engine():
+    return _tts_engine
