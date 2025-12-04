@@ -1,22 +1,9 @@
-/* base_resolved.qss
-   - versione con valori diretti
-*/
-
-/* ---------- PALETTE RISOLTA ---------- */
- /* @bg */              /* → */   /* #1B1B2F */
- /* @panel */           /* → */   /* #15151C */
- /* @muted */           /* → */   /* #8E8EA6 */
- /* @text */            /* → */   /* #D8D8E0 */
- /* @muted_text */      /* → */   /* #B2B2C7 */
- /* @accent1 */         /* → */   /* #932191 */
- /* @accent2 */         /* → */   /* #AD3D6F */
- /* @accent3 */         /* → */   /* #E17327 */
- /* @glass */           /* → */   /* rgba(255,255,255,0.03) */
-
+/* base_resolved.qss */
 
 /* ---------- RESET ---------- */
 * {
-    font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
+    /* Ho aggiunto .AppleSystemUIFont per Mac */
+    font-family: "Inter", ".AppleSystemUIFont", "Segoe UI", "Roboto", sans-serif;
     color: #D8D8E0;
 }
 
