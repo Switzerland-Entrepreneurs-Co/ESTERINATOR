@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QInputDialog, QApplication
 )
 
+from src.ui.screens.tts.block_highlighter import BlockHighlighter
 from src.ui.screens.tts.components.language_selector import LanguageSelector
 from src.ui.screens.tts.components.voice_selector import VoiceSelector
 from src.core.dialogue_parser import DialogueParser
@@ -23,29 +24,36 @@ class TTSGeneratorView(QWidget):
         self.load_voices()
 
     def init_ui(self):
+        # Il layout base
         layout = QVBoxLayout()
 
-        lbl_info = QLabel("Generatore Dialoghi Neurali (Online)")
+        lbl_info = QLabel("Naele stupido")
         layout.addWidget(lbl_info)
 
+        # --- Riga orizzontale con selezione di lingua, voce e bottone marker ---
         controls_layout = QHBoxLayout()
 
+        # Selezione lingua ---
         controls_layout.addWidget(QLabel("Lingua:"))
         self.language_combo = LanguageSelector()
         controls_layout.addWidget(self.language_combo)
 
+        # Selezione voce ---
         controls_layout.addWidget(QLabel("Voce:"))
         self.voice_combo = VoiceSelector()
         controls_layout.addWidget(self.voice_combo)
 
+        # Bottone marker ---
         self.btn_insert_marker = QPushButton("Inserisci Marker")
         self.btn_insert_marker.clicked.connect(self.insert_voice_marker)
         controls_layout.addWidget(self.btn_insert_marker)
 
         layout.addLayout(controls_layout)
 
+        # --- Area di testo e bottone generazione ---
         self.text_edit = QPlainTextEdit()
-        self.text_edit.setPlaceholderText("Inserisci testo qui...")
+        self.text_edit.setPlaceholderText("C'è puzza di cacca addosso...")
+        BlockHighlighter(self.text_edit.document())
         layout.addWidget(self.text_edit)
 
         self.btn_generate = QPushButton("Salva e Genera Dialogo")

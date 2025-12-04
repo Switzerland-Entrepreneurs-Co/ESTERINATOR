@@ -6,8 +6,7 @@ from PySide6.QtCore import QSize
 class LanguageSelector(QComboBox):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setIconSize(QSize(32, 32))
-        self.setMinimumWidth(50)
+        self.setIconSize(QSize(24, 24))
         self.icon_paths = self.load_icon_paths()
 
     def load_icon_paths(self):
