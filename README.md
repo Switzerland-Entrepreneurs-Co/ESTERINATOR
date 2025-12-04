@@ -4,19 +4,8 @@ Malaki è stupido
 
 ## NUOVA REGOLA DI SINTASSI
 Per fare una cosa bella e pulita, adesso il marker [voce] dovrà stare in una riga dove compare da solo.
-Esempio:
 
-[esterina]
+Se questa condizione non è condizionata, allora non permette di generare l'audio.
 
-Ciao Ada! Ho sentito che Nahele ha fatto le scarpe a Roberta!
+![Dimostrazione del dialogo](src/resources/readme/dialogue_sample.png)
 
-[ada]
-
-è proprio vero, esterì! si fa comandare troppo...
-
-[nahele]
-
-io sono stupido
-
-Questo serve all'highlight della sintassi, che è una fighissima feature che al momento non ho ancora finito.
-Ma sarà bella perché permetterà anche di segnalare errori.
