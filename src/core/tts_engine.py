@@ -1,20 +1,35 @@
 import asyncio
 import os
 import edge_tts
-import re
 
-# Adesso è un singleton
+from src.core.utility.alias_parser import AliasParser
+
+
+# Singleton
 class TTSEngine:
     def __init__(self):
+        self.keywords = set() # Usate per l'highlight della sintassi
         self.voices = []
         self.alias_to_voice = {}
 
-        self.keywords = []
-        self.pattern = re.compile(r"\s*([a-zA-Z])\s*->\s*([a-zA-Z])\s*")
-        # Carica le voci all'avvio
+        self._init_keywords()
+
+    # Vengono popolati voices, alias_to_voice e infine keyword
+    def _init_keywords(self):
+        self.keywords = set()
+
         asyncio.run(self._load_voices_async())
+        self.reload_alias()
 
+        # aggiungi tutti gli alias come singole stringhe
+        self.keywords.update(self.alias_to_voice.keys())
 
+    # Qui vengono mappati gli alias alle voci effettive
+    def reload_alias(self):
+        self.alias_to_voice = AliasParser().map_aliases(self.voices)
+
+    # --- PARTE DEL LOAD DELLE VOCI ---
+    # Vengono caricate le voci e aggiunte come keyword (per l'highlight della sintassi)
     async def _load_voices_async(self):
         try:
             voices = await edge_tts.list_voices()
@@ -25,6 +40,10 @@ class TTSEngine:
                     "id": v['ShortName'],
                     "name": friendly_name
                 })
+
+                # Il marker della voce viene salvato come keyword
+                self.keywords.add(v['ShortName'])
+
         except Exception as e:
             print(f"[TTSEngine] Errore caricamento voci: {e}")
 
@@ -46,9 +65,28 @@ class TTSEngine:
             return f"{gender} - {raw_name}"
         except:
             return voice_data['ShortName']
+    
+    # ------
 
+    # Converte il marker nel valore utilizzabile dall'API
+    # Se è un alias viene convertito in voce effettiva, altrimenti viene restituito così com'è
+    # Se invece è una roba invalida, viene restituito None
+    # TODO: TROVA UN NOME MIGLIORE PER CANON_FORMAT
+    def canon_format(self, marker):
+        if marker not in self.keywords:
+            return None
+
+        if marker in self.alias_to_voice:
+            return self.alias_to_voice[marker]
+        return marker
+
+    # --- METODI GET ---
+    def get_keywords(self):
+        return self.keywords
+    
     def get_voices(self):
         return self.voices
+    # ------
 
     async def _generate_audio_async(self, text, voice_id, output_path):
         if not voice_id: voice_id = "it-IT-ElsaNeural"

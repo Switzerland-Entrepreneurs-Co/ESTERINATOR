@@ -4,6 +4,8 @@
 *.wav
 *.json
 
+/config/
+
 # Cache di Python (non servono a nessuno)
 __pycache__/
 *.py[cod]

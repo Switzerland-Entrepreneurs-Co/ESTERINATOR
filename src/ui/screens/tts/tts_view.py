@@ -8,7 +8,7 @@ from src.ui.screens.tts.block_highlighter import BlockHighlighter
 from src.ui.screens.tts.components.language_selector import LanguageSelector
 from src.ui.screens.tts.components.voice_selector import VoiceSelector
 from src.core.dialogue_parser import DialogueParser
-from src.core.tts_engine import TTSEngine
+from src.core.tts_engine import tts_engine
 from src.core.file_manager import FileManager
 
 class TTSGeneratorView(QWidget):
@@ -16,7 +16,7 @@ class TTSGeneratorView(QWidget):
         super().__init__()
         self.library_path = library_path
 
-        self.tts_engine = TTSEngine()
+        self.tts_engine = tts_engine()
         self.parser = DialogueParser()
         self.file_manager = FileManager(library_path)
 
@@ -99,12 +99,12 @@ class TTSGeneratorView(QWidget):
     def generate_dialogue(self):
         text = self.text_edit.toPlainText()
         if not text.strip():
-            QMessageBox.warning(self, "Attenzione", "Inserisci del testo.")
+            QMessageBox.warning(self, "Attenzione", "Ma che vuoi generare senza testo?????")
             return
 
         segments = self.parser.parse(text)
         if not segments:
-            QMessageBox.warning(self, "Attenzione", "Nessun segmento trovato.")
+            QMessageBox.warning(self, "Sei stupido!", "Errore nella sintassi, handicappato")
             return
 
         filename, ok = QInputDialog.getText(self, "Salva Audio", "Nome del file (senza estensione):")

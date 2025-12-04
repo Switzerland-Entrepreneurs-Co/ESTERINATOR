@@ -1,69 +1,124 @@
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
 from PySide6.QtCore import QRegularExpression
 
+from src.core.tts_engine import tts_engine
+
+
 class BlockHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
         super().__init__(document)
 
-        # Keyword valide per il primo []
-        self.valid_keywords = ["ok", "ciao", "apple"]
+        # Lista di voci valide
+        self.valid_keywords = tts_engine().get_keywords()
 
-        # Formati
-        self.block_fmt = QTextCharFormat()              # highlight per singolo blocco
-        self.block_fmt.setBackground(QColor(255, 230, 120, 160))
+        # Dizionario dei colori per voce
+        # TODO: ESPANDERE E CAMBIARE IN BASE ALLA PALETTE
+        self.voice_colors = {
+            # esempio:
+            "it-IT-DiegoNeural": QColor("#ad3d6f"),
+            "it-IT-AlessioMultilingualNeural": QColor("#932191"),
+            "it-IT-IsabellaNeural": QColor("#e17327"),
+        }
 
-        self.dotted_fmt = QTextCharFormat()             # sottolineatura a puntini
-        self.dotted_fmt.setUnderlineStyle(QTextCharFormat.DotLine)
+        # Colore fallback se la voce è valida ma senza colore dedicato
+        self.default_color = QColor("#ad3d6f")
 
-        self.error_fmt = QTextCharFormat()              # wave underline rossa
-        self.error_fmt.setUnderlineStyle(QTextCharFormat.WaveUnderline)
-        self.error_fmt.setUnderlineColor(QColor("#ff4444"))
+        # Regex per marker solitario
+        self.marker_regex = QRegularExpression(r"^\s*\[([^\]]+)\]\s*$")
 
-        # Regex per trovare [ ... ]
-        self.block_regex = QRegularExpression(r"\[([^\]]*)\]")
+
+        self.error_format = QTextCharFormat()
+        self.error_format.setUnderlineStyle(QTextCharFormat.WaveUnderline)
+        self.error_format.setUnderlineColor(QColor("#ff4444"))
+
+    # ------------------------------------------------------------------------
 
     def highlightBlock(self, text):
-        # Lista dei match: (start, end, contenuto)
-        blocks = []
+        prev_state = self.previousBlockState()
 
-        it = self.block_regex.globalMatch(text)
-        while it.hasNext():
-            m = it.next()
-            start = m.capturedStart()
-            end = m.capturedEnd()
-            content = m.captured(1)
-            blocks.append((start, end, content))
-
-            # 🔵 Highlight base di ogni blocco
-            self.setFormat(start, end - start, self.block_fmt)
-
-        # Nessun blocco → niente da fare
-        if not blocks:
+        match = self.marker_regex.match(text)
+        if match.hasMatch():
+            # Se riga è un marker, evidenzia e cambia stato
+            self._highlight_marker(match)
             return
 
-        # 🔴 Error checking sulla PRIMA coppia []
-        first_content = blocks[0][2]
-        if not self.is_valid(first_content):
-            first_start, first_end, _ = blocks[0]
-            self.setFormat(first_start, first_end - first_start, self.error_fmt)
+        if prev_state > 0:
+            # Siamo sotto un marker valido
+            self._highlight_dialog_line(text, prev_state)
+            self.setCurrentBlockState(prev_state)  # IMPORTANTISSIMO: mantieni stato!
+            return
 
-        # 🔵 Sottolineatura puntinata tra blocchi consecutivi
-        for i in range(len(blocks) - 1):
-            first_end = blocks[i][1]
-            second_start = blocks[i+1][0]
+        if prev_state == -1:
+            # Siamo sotto un marker invalido
+            self.setFormat(0, len(text), self.error_format)
+            self.setCurrentBlockState(prev_state)  # mantieni stato
+            return
 
-            if second_start > first_end:
-                length = second_start - first_end
-                # sottolineatura con lo stesso colore del primo blocco
-                self.dotted_fmt.setUnderlineColor(QColor("#ffaa00"))
-                self.setFormat(first_end, length, self.dotted_fmt)
+        # Se nessun marker precedente, nessuna evidenza e stato 0
+        self.setCurrentBlockState(0)
 
-    def is_valid(self, text):
-        """
-        Decide se il contenuto del primo [] è valido.
-        Puoi personalizzarlo come ti serve.
-        """
-        for kw in self.valid_keywords:
-            if kw in text:
-                return True
-        return False
+    # ------------------------------------------------------------------------
+
+    def _highlight_marker(self, match):
+        """Colora il marker e aggiorna lo stato del blocco."""
+        content = match.captured(1)
+        start = match.capturedStart()
+        end = match.capturedEnd()
+
+        # Determina validità
+        if self._is_voice_valid(content):
+            color_index = self._store_voice_color(content)
+            color = self._get_color_from_state(color_index)
+            self.setCurrentBlockState(color_index)
+
+            # formato del marker con colore dinamico
+            marker_fmt = QTextCharFormat()
+            marker_fmt.setBackground(color)
+            self.setFormat(start, end - start, marker_fmt)
+
+        else:
+            # marker non valido
+            self.setFormat(start, end - start, self.error_format)
+            self.setCurrentBlockState(-1)
+
+    # ------------------------------------------------------------------------
+
+    def _highlight_dialog_line(self, text, state):
+        """Applica sottolineatura puntinata del colore associato al marker valido."""
+        color = self._get_color_from_state(state)
+
+        dotted_fmt = QTextCharFormat()
+        dotted_fmt.setUnderlineStyle(QTextCharFormat.DotLine)
+        dotted_fmt.setUnderlineColor(color)
+
+        self.setFormat(0, len(text), dotted_fmt)
+
+    # ------------------------------------------------------------------------
+
+    def _get_color_from_state(self, state):
+        """Ritorna il colore associato allo stato (state > 0)."""
+        index = state - 1
+        return self._color_list[index]
+
+    # ------------------------------------------------------------------------
+
+    def _store_voice_color(self, voice_name):
+        """Assegna un colore alla voce e ritorna il suo indice per lo stato."""
+        # Se non esiste già un colore, usa default
+        color = self.voice_colors.get(voice_name, self.default_color)
+
+        # Se non abbiamo già questa voce nella lista interna, la aggiungiamo
+        if not hasattr(self, "_color_list"):
+            self._color_list = []
+
+        if color not in self._color_list:
+            self._color_list.append(color)
+
+        # restituisce indice + 1 (stato > 0)
+        return self._color_list.index(color) + 1
+
+    # ------------------------------------------------------------------------
+
+    def _is_voice_valid(self, text):
+        """Controlla se il contenuto del marker è una keyword valida."""
+        return any(kw in text for kw in self.valid_keywords)
