@@ -3,11 +3,11 @@ import re
 class DialogueParser:
     def __init__(self):
         # Riconosce [voice=qualcosa]
-        self.marker_pattern = re.compile(r'\[voice=(.*?)\]', re.IGNORECASE)
+        self.marker_pattern = re.compile(r'\[(.*?)]', re.IGNORECASE)
 
     def parse(self, text):
         """
-        Restituisce una lista di segmenti:
+        Restituisce una lista di segmenti:v
         [{'voice': 'ID', 'text': 'contenuto'}, ...]
         """
 
