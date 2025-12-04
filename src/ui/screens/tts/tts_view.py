@@ -20,6 +20,8 @@ class TTSGeneratorView(QWidget):
         self.parser = DialogueParser()
         self.file_manager = FileManager(library_path)
 
+        self.highlighter = None
+
         self.init_ui()
         self.load_voices()
 
@@ -53,7 +55,7 @@ class TTSGeneratorView(QWidget):
         # --- Area di testo e bottone generazione ---
         self.text_edit = QPlainTextEdit()
         self.text_edit.setPlaceholderText("C'è puzza di cacca addosso...")
-        BlockHighlighter(self.text_edit.document())
+        self.highlighter = BlockHighlighter(self.text_edit.document())
         layout.addWidget(self.text_edit)
 
         self.btn_generate = QPushButton("Salva e Genera Dialogo")
@@ -152,3 +154,6 @@ class TTSGeneratorView(QWidget):
 
     def set_editor_content(self, text):
         self.text_edit.setPlainText(text)
+
+    def refresh_highlighter_keywords(self):
+        self.highlighter.refresh_keywords()

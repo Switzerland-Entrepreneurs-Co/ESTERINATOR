@@ -6,19 +6,20 @@ from src.core.tts_engine import tts_engine
 class DialogueParser:
     def __init__(self):
         # Riconosce [marker]
-        self.marker_pattern = re.compile(r'^\s*\[(.*?)]\s*$', re.IGNORECASE)
+        self.marker_pattern = re.compile(r'^\s*\[(.*)]\s*$', re.MULTILINE)
 
     """
         Restituisce una lista di segmenti:
         [{'voice': 'ID', 'text': 'contenuto'}, ...]
     """
-    # TODO: IMPEDISCI CHE LA SINTASSI V
     def parse(self, text):
         segments = []
+        print(text)
         matches = list(self.marker_pattern.finditer(text))
 
         # Se non ci sono marker -> niente dialogo valido
         if not matches:
+            print("il problema è qui?")
             return []
 
         for i, match in enumerate(matches):
@@ -26,6 +27,7 @@ class DialogueParser:
             # (ad esempio da alias a voce effettiva)
             # Se voice_id = None, il marker è invalido
             voice_id = tts_engine().canon_format( match.group(1).strip() )
+            print(voice_id)
             if voice_id is None:
                 return []
 

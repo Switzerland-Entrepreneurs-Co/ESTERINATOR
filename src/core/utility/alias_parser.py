@@ -3,7 +3,7 @@ from pathlib import Path
 
 class AliasParser:
     def __init__(self):
-        self.pattern = re.compile(r"\s*([a-zA-Z])\s*->\s*(.*)\s*")
+        self.pattern = re.compile(r"\s*(.+?)\s*->\s*(.+)\s*")
 
     # Fa il parsing del file di mapping delle alias
     # voices contiene tutte le voci effettivamente esistenti

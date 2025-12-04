@@ -10,23 +10,22 @@ class TTSEngine:
     def __init__(self):
         self.keywords = set() # Usate per l'highlight della sintassi
         self.voices = []
+        self.voice_keywords = set()
         self.alias_to_voice = {}
 
-        self._init_keywords()
+        asyncio.run(self._load_voices_async())
+        self.reload_keywords()
 
     # Vengono popolati voices, alias_to_voice e infine keyword
-    def _init_keywords(self):
+    def reload_keywords(self):
         self.keywords = set()
-
-        asyncio.run(self._load_voices_async())
-        self.reload_alias()
-
-        # aggiungi tutti gli alias come singole stringhe
-        self.keywords.update(self.alias_to_voice.keys())
+        self.keywords.update(self.voice_keywords)  # Voci reali (es. it-IT-IsabellaNeural)
+        self.reload_alias()  # Aggiorna alias_to_voice
+        self.keywords.update(self.alias_to_voice.keys())  # Aggiungi alias come keyword
 
     # Qui vengono mappati gli alias alle voci effettive
     def reload_alias(self):
-        self.alias_to_voice = AliasParser().map_aliases(self.voices)
+        self.alias_to_voice = AliasParser().map_aliases(self.voice_keywords)
 
     # --- PARTE DEL LOAD DELLE VOCI ---
     # Vengono caricate le voci e aggiunte come keyword (per l'highlight della sintassi)
@@ -42,7 +41,7 @@ class TTSEngine:
                 })
 
                 # Il marker della voce viene salvato come keyword
-                self.keywords.add(v['ShortName'])
+                self.voice_keywords.add(v['ShortName'])
 
         except Exception as e:
             print(f"[TTSEngine] Errore caricamento voci: {e}")
