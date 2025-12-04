@@ -8,8 +8,10 @@ Esempio:
 
 [esterina]
 Ciao Ada! Ho sentito che Nahele ha fatto le scarpe a Roberta!
+
 [ada]
 è proprio vero, esterì! si fa comandare troppo...
+
 [nahele]
 io sono stupido
 
