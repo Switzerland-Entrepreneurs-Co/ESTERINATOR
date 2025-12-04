@@ -1,7 +1,8 @@
 import os
-from PySide6.QtCore import Signal, Qt, QSize
-from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QFrame, QPushButton, QHBoxLayout
+
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QFrame, QHBoxLayout
 
 from src.ui.widgets.buttons.icon_button import IconButton
 from src.ui.widgets.cards.base_card import BaseCardWidget
