@@ -83,7 +83,7 @@ class TTSGeneratorView(QWidget):
     def insert_voice_marker(self):
         voice_id = self.voice_combo.currentData()
         if voice_id:
-            marker = f"\n[voice={voice_id}]\n"
+            marker = f"\n[{voice_id}]\n"
             self.text_edit.insertPlainText(marker)
             self.text_edit.setFocus()
 
