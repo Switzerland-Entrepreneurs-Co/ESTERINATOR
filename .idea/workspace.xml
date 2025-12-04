@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcc5d326-ef2c-479d-8371-be90b074fd07" name="Changes" comment="piccolo refactor">
-      <change afterPath="$PROJECT_DIR$/src/ui/screens/alias_editor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/readme/happy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/readme/problem.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/readme/solution.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/dialogue_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/dialogue_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/tts_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/tts_engine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/utility/alias_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/utility/alias_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/screens/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/main_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/screens/tts/block_highlighter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/tts/block_highlighter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/screens/tts/tts_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/tts/tts_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
