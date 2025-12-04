@@ -11,6 +11,9 @@ if __name__ == "__main__":
     css = loader.load("src/resources/qss/dark.qss")
     app.setStyleSheet(css)
 
+    # Pre-caricamento di risorse prima di lanciare l'applicazione
+    File
+
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
