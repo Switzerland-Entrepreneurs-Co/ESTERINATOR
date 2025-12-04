@@ -14,32 +14,6 @@ class TTSEngine:
         # Carica le voci all'avvio
         asyncio.run(self._load_voices_async())
 
-    def _format_voice_name(self, voice_data):
-        """
-        Trasforma i dati grezzi in un nome leggibile.
-        Input: {'ShortName': 'it-IT-DiegoNeural', 'Gender': 'Male', 'Locale': 'it-IT'}
-        Output: "Diego (Italiano) - M"
-        """
-        try:
-            # ShortName è tipo "it-IT-DiegoNeural"
-            short_name = voice_data['ShortName']
-            locale = voice_data['Locale']
-            gender = "M" if voice_data['Gender'] == "Male" else "F"
-
-            # Estraiamo il nome (es. Diego) rimuovendo "Neural" e il prefisso locale
-            # Solitamente è l'ultima parte dopo l'ultimo trattino
-            raw_name = short_name.split('-')[-1].replace('Neural', '')
-
-            # Mappiamo il locale in una lingua leggibile (base)
-            lang_map = {
-                'it-IT': 'Italiano', 'en-US': 'Inglese USA', 'en-GB': 'Inglese UK',
-                'fr-FR': 'Francese', 'de-DE': 'Tedesco', 'es-ES': 'Spagnolo'
-            }
-            lang_readable = lang_map.get(locale, locale)  # Fallback al codice se non trovato
-
-            return f"{raw_name} ({lang_readable}) - {gender}"
-        except:
-            return voice_data['ShortName']
 
     async def _load_voices_async(self):
         try:
@@ -49,15 +23,29 @@ class TTSEngine:
                 friendly_name = self._format_voice_name(v)
                 self.voices.append({
                     "id": v['ShortName'],
-                    "name": friendly_name,
-                    "locale": v['Locale']  # Utile per ordinare
+                    "name": friendly_name
                 })
-
-            # Ordiniamo: Prima le italiane, poi le altre
-            #self.voices.sort(key=lambda x: (x['locale'] != 'it-IT', x['name']))
-
         except Exception as e:
             print(f"[TTSEngine] Errore caricamento voci: {e}")
+
+    '''
+            Trasforma i dati grezzi in un nome leggibile.
+            Input: {'ShortName': 'it-IT-DiegoNeural', 'Gender': 'Male'}
+            Output: "M - Diego"
+    '''
+    def _format_voice_name(self, voice_data):
+        try:
+            # ShortName è tipo "it-IT-DiegoNeural"
+            short_name = voice_data['ShortName']
+            gender = "M" if voice_data['Gender'] == "Male" else "F"
+
+            # Estraiamo il nome (es. Diego) rimuovendo "Neural" e il prefisso locale
+            # Solitamente è l'ultima parte dopo l'ultimo trattino
+            raw_name = short_name.split('-')[-1].replace('Neural', '')
+
+            return f"{gender} - {raw_name}"
+        except:
+            return voice_data['ShortName']
 
     def get_voices(self):
         return self.voices
