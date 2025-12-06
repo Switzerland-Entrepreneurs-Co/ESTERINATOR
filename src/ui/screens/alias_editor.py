@@ -1,6 +1,10 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QPushButton, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QPushButton, QMessageBox, QHBoxLayout
 from PySide6.QtCore import Signal
 from pathlib import Path
+
+from src.ui.components.combobox.language_selector import LanguageSelector
+from src.ui.components.combobox.voice_selector import VoiceSelector
+
 
 class AliasEditor(QWidget):
     saved = Signal(str)  # Segnale emesso con il contenuto salvato
@@ -15,6 +19,18 @@ class AliasEditor(QWidget):
     def init_ui(self):
         layout = QVBoxLayout(self)
 
+        ''' MIGLIORA STA COSA
+        self.combo_box_row = QHBoxLayout(self)
+
+        self.language_combo = LanguageSelector()
+        self.combo_box_row.addWidget(self.language_combo)
+
+        self.voice_combo = VoiceSelector()
+        self.combo_box_row.addWidget(self.voice_combo)
+
+        layout.addLayout(self.combo_box_row)
+        '''
+
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("eg. Esterina -> it-IT-Isabella-Neural")
         layout.addWidget(self.text_edit)
@@ -23,6 +39,23 @@ class AliasEditor(QWidget):
         layout.addWidget(self.save_button)
 
         self.save_button.clicked.connect(self.on_save_clicked)
+
+        def load_voices(self):
+            voices = self.tts_engine.get_voices()
+            self.voice_combo.set_voices(voices)
+
+            languages = set(v['id'][:2] for v in voices)
+            self.language_combo.populate_languages(languages)
+
+            # Seleziona italiano di default se possibile
+            default_index = 0
+            for i in range(self.language_combo.count()):
+                if self.language_combo.itemData(i) == "it":
+                    default_index = i
+                    break
+            self.language_combo.setCurrentIndex(default_index)
+
+            self.voice_combo.filter_by_language(self.language_combo.itemData(default_index))
 
     def load_file(self):
         """Carica alias_map.txt o lo crea se non esiste."""

@@ -1,3 +1,4 @@
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QPlainTextEdit, QLabel, QPushButton,
@@ -5,8 +6,8 @@ from PySide6.QtWidgets import (
 )
 
 from src.ui.screens.tts.block_highlighter import BlockHighlighter
-from src.ui.screens.tts.components.language_selector import LanguageSelector
-from src.ui.screens.tts.components.voice_selector import VoiceSelector
+from src.ui.components.combobox.language_selector import LanguageSelector
+from src.ui.components.combobox.voice_selector import VoiceSelector
 from src.core.dialogue_parser import DialogueParser
 from src.core.tts_engine import tts_engine
 from src.core.file_manager import FileManager
@@ -36,12 +37,10 @@ class TTSGeneratorView(QWidget):
         controls_layout = QHBoxLayout()
 
         # Selezione lingua ---
-        controls_layout.addWidget(QLabel("Lingua:"))
         self.language_combo = LanguageSelector()
         controls_layout.addWidget(self.language_combo)
 
         # Selezione voce ---
-        controls_layout.addWidget(QLabel("Voce:"))
         self.voice_combo = VoiceSelector()
         controls_layout.addWidget(self.voice_combo)
 
@@ -94,6 +93,7 @@ class TTSGeneratorView(QWidget):
     def insert_voice_marker(self):
         voice_id = self.voice_combo.currentData()
         if voice_id:
+            # TODO: Togli \n iniziale se text_edit è alla prima riga, vuota o solo con spazi
             marker = f"\n[{voice_id}]\n"
             self.text_edit.insertPlainText(marker)
             self.text_edit.setFocus()
