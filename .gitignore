@@ -4,7 +4,7 @@
 *.wav
 *.json
 
-/config/
+/textfiles/
 
 # Cache di Python (non servono a nessuno)
 __pycache__/

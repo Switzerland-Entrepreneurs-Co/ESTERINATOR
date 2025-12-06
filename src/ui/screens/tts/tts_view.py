@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QInputDialog, QApplication
 )
 
+from src.config import AUDIO_LIBRARY_PATH
 from src.ui.screens.tts.block_highlighter import BlockHighlighter
 from src.ui.components.combobox.language_selector import LanguageSelector
 from src.ui.components.combobox.voice_selector import VoiceSelector
@@ -13,13 +14,12 @@ from src.core.tts_engine import tts_engine
 from src.core.file_manager import FileManager
 
 class TTSGeneratorView(QWidget):
-    def __init__(self, library_path):
+    def __init__(self):
         super().__init__()
-        self.library_path = library_path
 
         self.tts_engine = tts_engine()
         self.parser = DialogueParser()
-        self.file_manager = FileManager(library_path)
+        self.file_manager = FileManager(AUDIO_LIBRARY_PATH)
 
         self.highlighter = None
 
@@ -67,7 +67,7 @@ class TTSGeneratorView(QWidget):
         # Connetti cambio lingua
         self.language_combo.currentIndexChanged.connect(self.on_language_changed)
 
-    # TODO: è qua la roba delle vociiiiiiiiiiiii
+    # TODO: CENTRALIZZA DA UNA PARTE POICHé CONDIVISO CON AliasEditor
     def load_voices(self):
         voices = self.tts_engine.get_voices()
         self.voice_combo.set_voices(voices)

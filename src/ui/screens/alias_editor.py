@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QPushButton, QMes
 from PySide6.QtCore import Signal
 from pathlib import Path
 
+from src.config import PROJECT_ROOT
 from src.ui.components.combobox.language_selector import LanguageSelector
 from src.ui.components.combobox.voice_selector import VoiceSelector
 
@@ -9,10 +10,12 @@ from src.ui.components.combobox.voice_selector import VoiceSelector
 class AliasEditor(QWidget):
     saved = Signal(str)  # Segnale emesso con il contenuto salvato
 
-    def __init__(self, base_dir: str):
+    def __init__(self):
         super().__init__()
-        self.base_dir = Path(base_dir)
+        # TODO: CAMBIA QUESTA COSA METTILA IN config.py
+        self.base_dir = Path(PROJECT_ROOT)
         self.alias_map_path = self.base_dir / "config" / "alias_map.txt"
+        # ------
         self.init_ui()
         self.load_file()  # Carica o crea il file all’avvio
 
@@ -40,7 +43,8 @@ class AliasEditor(QWidget):
 
         self.save_button.clicked.connect(self.on_save_clicked)
 
-        def load_voices(self):
+    '''
+    def load_voices(self):
             voices = self.tts_engine.get_voices()
             self.voice_combo.set_voices(voices)
 
@@ -56,7 +60,9 @@ class AliasEditor(QWidget):
             self.language_combo.setCurrentIndex(default_index)
 
             self.voice_combo.filter_by_language(self.language_combo.itemData(default_index))
+    '''
 
+    # TODO: Questo non deve mai stare qui, mettilo dove dovrebbe
     def load_file(self):
         """Carica alias_map.txt o lo crea se non esiste."""
         try:
