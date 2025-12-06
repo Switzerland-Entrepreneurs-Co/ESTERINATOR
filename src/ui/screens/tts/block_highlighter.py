@@ -1,14 +1,14 @@
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
 from PySide6.QtCore import QRegularExpression
 
-from src.core.tts_engine import tts_engine
+from src.core.tts_engine import TTSEngine
 
 
 class BlockHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
         super().__init__(document)
 
-        self.valid_keywords = tts_engine().get_keywords()
+        self.valid_keywords = TTSEngine().get_keywords()
         self.voice_colors = {
             "it-IT-DiegoNeural": QColor("#ad3d6f"),
             "it-IT-AlessioMultilingualNeural": QColor("#932191"),
@@ -23,7 +23,7 @@ class BlockHighlighter(QSyntaxHighlighter):
 
     def refresh_keywords(self):
         """Ricarica le keyword e rifa l'highlight completo."""
-        self.valid_keywords = tts_engine().get_keywords()
+        self.valid_keywords = TTSEngine().get_keywords()
         self.rehighlight()
 
     def highlightBlock(self, text):

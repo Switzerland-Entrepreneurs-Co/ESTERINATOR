@@ -1,4 +1,3 @@
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QPlainTextEdit, QLabel, QPushButton,
@@ -6,18 +5,25 @@ from PySide6.QtWidgets import (
 )
 
 from src.config import AUDIO_LIBRARY_PATH
+from src.core.tts_engine import TTSEngine
 from src.ui.screens.tts.block_highlighter import BlockHighlighter
 from src.ui.components.combobox.language_selector import LanguageSelector
 from src.ui.components.combobox.voice_selector import VoiceSelector
 from src.core.dialogue_parser import DialogueParser
-from src.core.tts_engine import tts_engine
 from src.core.file_manager import FileManager
 
+# TODO: QUESTA ANALISI DI MERCATO FA SCHIFO
+# TODO: IDIOZIA
+# TODO: PROVI A RIPETERLO!
+# TODO: I-DIO-ZI-A!
+# TODO: *SNIFF*
+# TODO: COMUNQUE QUESTA COSA NECESSITA MIGLIORAMENTI SERI E MOLTO SGROVIGLIAMENTO
 class TTSGeneratorView(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.tts_engine = tts_engine()
+        # TODO: ELIMINA self.tts_engine E FAI SEMPRE CHIAMATE AL SINGLETON (?)
+        self.tts_engine = TTSEngine()
         self.parser = DialogueParser()
         self.file_manager = FileManager(AUDIO_LIBRARY_PATH)
 

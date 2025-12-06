@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import QUrl, Qt, Signal
 from PySide6.QtGui import QDesktopServices
 
+from src.config import AUDIO_LIBRARY_PATH
 from src.ui.widgets.cards.add_card import AddCardWidget
 from src.ui.widgets.cards.audio_card import AudioCardWidget
 import os
@@ -14,16 +15,18 @@ import json
 class AudioLibraryView(QWidget):
     edit_requested = Signal(str)
 
-    def __init__(self, library_path):
+    def __init__(self):
         super().__init__()
-        self.library_path = os.path.abspath(library_path)
+        self.library_path = os.path.abspath(AUDIO_LIBRARY_PATH)
         self.init_ui()
 
     def init_ui(self):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(10)
 
-        header = QLabel(f"📂 Libreria Audio: {self.library_path}")
+        # Header adesso è un pulsante che apre la cartella audio
+        header = QPushButton(f"📂 Libreria Audio: {self.library_path}")
+        header.clicked.connect(self.open_system_folder)
         main_layout.addWidget(header)
 
         # --- Scroll area con card ---
@@ -47,10 +50,6 @@ class AudioLibraryView(QWidget):
         refresh_btn = QPushButton("Aggiorna")
         refresh_btn.clicked.connect(self.refresh_view)
         btns.addWidget(refresh_btn)
-
-        open_btn = QPushButton("Apri Cartella")
-        open_btn.clicked.connect(self.open_system_folder)
-        btns.addWidget(open_btn)
 
         main_layout.addLayout(btns)
         self.setLayout(main_layout)

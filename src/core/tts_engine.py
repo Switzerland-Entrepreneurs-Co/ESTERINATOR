@@ -7,7 +7,16 @@ from src.core.utility.alias_parser import AliasParser
 
 # Singleton
 class TTSEngine:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(TTSEngine, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
+        if hasattr(self, '_initialized') and self._initialized:
+            return
         self.keywords = set() # Usate per l'highlight della sintassi
         self.voices = []
         self.voice_keywords = set()
@@ -152,9 +161,3 @@ class TTSEngine:
         except Exception as e:
             print(f"[MERGE] Errore: {e}")
             return False
-
-# istanza unica
-_tts_engine = TTSEngine()
-
-def tts_engine():
-    return _tts_engine

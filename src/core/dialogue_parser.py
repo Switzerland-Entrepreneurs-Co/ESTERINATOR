@@ -1,6 +1,6 @@
 import re
 
-from src.core.tts_engine import tts_engine
+from src.core.tts_engine import TTSEngine
 
 
 class DialogueParser:
@@ -26,7 +26,7 @@ class DialogueParser:
             # Trasformiamo il marker nel formato canonico
             # (ad esempio da alias a voce effettiva)
             # Se voice_id = None, il marker è invalido
-            voice_id = tts_engine().canon_format( match.group(1).strip() )
+            voice_id = TTSEngine().canon_format( match.group(1).strip() )
             print(voice_id)
             if voice_id is None:
                 return []
