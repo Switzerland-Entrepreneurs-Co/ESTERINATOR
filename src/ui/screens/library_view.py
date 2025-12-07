@@ -24,7 +24,7 @@ class AudioLibraryView(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(10)
 
-        # Header adesso è un pulsante che apre la cartella audio
+        # Header è un pulsante che apre la cartella audio
         header = QPushButton(f"📂 Libreria Audio: {self.library_path}")
         header.clicked.connect(self.open_system_folder)
         main_layout.addWidget(header)

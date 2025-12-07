@@ -18,6 +18,8 @@ env/
 # File temporanei IDE
 .vscode/
 .idea/
+# NON TOGLIERE STO CAZZO DI COSO CHE STA ROMPENDO I COGLIONI PESANTEMENTE
+.idea/workspace.xml
 
 # File di sistema
 .DS_Store
