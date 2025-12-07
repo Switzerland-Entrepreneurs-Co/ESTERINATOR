@@ -3,9 +3,11 @@ from PySide6.QtWidgets import QComboBox
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QSize
 
+# TODO: MODIFICA AGGIUNGENDO I NOMI DEI PAESI
 class LanguageSelector(QComboBox):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setFixedWidth(100)
         self.setIconSize(QSize(24, 24))
         self.icon_paths = self.load_icon_paths()
 

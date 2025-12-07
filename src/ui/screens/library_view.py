@@ -6,10 +6,12 @@ from PySide6.QtCore import QUrl, Qt, Signal
 from PySide6.QtGui import QDesktopServices
 
 from src.config import AUDIO_LIBRARY_PATH
-from src.ui.widgets.cards.add_card import AddCardWidget
-from src.ui.widgets.cards.audio_card import AudioCardWidget
 import os
 import json
+
+from src.core.file_manager import FileManager
+from src.ui.popup import Popup
+from src.ui.widgets.cards.audio_card import AudioCard
 
 
 class AudioLibraryView(QWidget):
@@ -68,11 +70,6 @@ class AudioLibraryView(QWidget):
         row = 0
         col = 0
 
-        # Aggiungi prima la card per creare nuovo file
-        add_card = AddCardWidget()
-        # TODO: Fai in modo che apra la TTSView senza testo
-        self.grid.addWidget(add_card, row, col)
-
         col += 1
         if col >= columns:
             col = 0
@@ -83,11 +80,11 @@ class AudioLibraryView(QWidget):
             if fname.lower().endswith((".wav", ".mp3")):
                 full_path = os.path.join(self.library_path, fname)
 
-                card = AudioCardWidget(full_path)
+                card = AudioCard(full_path)
 
-                card.play_requested.connect(self.play_file)
-                card.delete_requested.connect(self.delete_file)
-                card.edit_requested.connect(self.load_text_for_editing)
+                card.play_requested.connect(self.play_file_signal)
+                card.delete_requested.connect(self.delete_file_signal)
+                card.edit_requested.connect(self.edit_file_signal)
 
                 self.grid.addWidget(card, row, col)
 
@@ -96,30 +93,17 @@ class AudioLibraryView(QWidget):
                     col = 0
                     row += 1
 
-    def play_file(self, file_path):
+
+    # TODO: SPOSTARE QUESTI SU UN CONTROLLER E NON ALLA CAZZO DI VIEW
+    # -------------------------------------------------------------
+    def play_file_signal(self, file_path):
         QDesktopServices.openUrl(QUrl.fromLocalFile(file_path))
 
-    def delete_file(self, file_path):
-        name = os.path.basename(file_path)
+    def delete_file_signal(self, file_path):
+        if Popup.delete_file_popup(self, file_path):
+            FileManager.delete_file(file_path)
 
-        confirm = QMessageBox.question(
-            self, "Conferma Eliminazione",
-            f"Vuoi davvero eliminare '{name}'?",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        if confirm != QMessageBox.Yes:
-            return
-
-        try:
-            os.remove(file_path)
-            json_path = os.path.splitext(file_path)[0] + ".json"
-            if os.path.exists(json_path):
-                os.remove(json_path)
-            self.refresh_view()
-        except Exception as e:
-            QMessageBox.critical(self, "Errore", str(e))
-
-    def load_text_for_editing(self, file_path):
+    def edit_file_signal(self, file_path):
         json_path = os.path.splitext(file_path)[0] + ".json"
 
         if not os.path.exists(json_path):
@@ -133,3 +117,5 @@ class AudioLibraryView(QWidget):
 
     def open_system_folder(self):
         QDesktopServices.openUrl(QUrl.fromLocalFile(self.library_path))
+
+    # -------------------------------------------------------------

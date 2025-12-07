@@ -11,15 +11,15 @@ class Card(QFrame):
 
     # --- Metodi da implementare ---
     # Mostra l'icona
-    def _icon(self) -> QLayout:
+    def _icon(self):
         pass
 
     # Informazioni/metadati
-    def _body(self) -> QLayout:
+    def _body(self):
         pass
 
     # Dove vanno i bottoni
-    def _action_bar(self) -> QLayout:
+    def _action_bar(self):
         pass
     # ------
 
@@ -37,7 +37,7 @@ class Card(QFrame):
     def _top_bar(self):
         top = QHBoxLayout()
 
-        top.addLayout(self._icon())
+        top.addWidget(self._icon())
         top.addLayout(self._title_subtitle())
         # TODO: Scopri se serve
         # top.addLayout(self._menu_button())
@@ -47,6 +47,7 @@ class Card(QFrame):
     # Titolo e sottotitolo della card
     def _title_subtitle(self) -> QVBoxLayout:
         title_box = QVBoxLayout()
+        title_box.setSpacing(0)
 
         title = os.path.splitext(os.path.basename(self.path))[0]
 

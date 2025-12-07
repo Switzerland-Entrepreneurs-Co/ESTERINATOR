@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QLayout
+from PySide6.QtWidgets import QLayout, QLabel
 
 from src.ui.widgets.cards.card import Card
 
@@ -6,10 +6,11 @@ from src.ui.widgets.cards.card import Card
 class ProjectCard(Card):
     def __init__(self, path: str):
         super().__init__(path)
+        self.setProperty("class", "project-card")
 
     # --- Metodi da implementare ---
     # Mostra l'icona
-    def _icon(self) -> QLayout:
+    def _icon(self) -> QLabel:
         pass
 
     # Informazioni/metadati

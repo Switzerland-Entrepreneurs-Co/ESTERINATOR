@@ -3,7 +3,6 @@ from PySide6.QtWidgets import QComboBox
 class VoiceSelector(QComboBox):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setMinimumWidth(250)
         self.all_voices = []
 
     def set_voices(self, voices):

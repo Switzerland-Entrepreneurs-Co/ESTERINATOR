@@ -15,16 +15,16 @@ QLabel {
     padding: 0;
 }
 
-
 /* ============================ PANELS ================================ */
 QFrame, QGroupBox {
-    background-color: #181824;
+    background-color: #121221;
     padding: 6px;
 }
 
 QGroupBox {
     margin-top: 12px;
 }
+
 QGroupBox:title {
     subcontrol-origin: margin;
     left: 8px;
@@ -33,16 +33,10 @@ QGroupBox:title {
     font-weight: 600;
 }
 
-QFrame[role="divider"] {
-    background-color: rgba(255,255,255,0.05);
-    min-height: 1px;
-    border: none;
-}
-
-
 /* ============================ BUTTONS =============================== */
 QPushButton {
-    background: rgba(255,255,255,0.015);
+    background-color: transparent;
+    border: none;
     color: #E6E2F0;
     padding: 8px 12px;
     border-radius: 6px;
@@ -90,30 +84,28 @@ QPlainTextEdit {
 
 /* Requested: larger monospaced font in QPlainTextEdit */
 QPlainTextEdit {
+    background-color: rgba(255,255,255,0.02);
     font-size: 18px;
     font-family: Consolas, "Fira Code", monospace;
 }
 
 /* Improved ComboBox */
 QComboBox {
-    padding-right: 28px; /* space for arrow */
     min-height: 0; /* Requested: no minimum size */
 }
 
 QComboBox::drop-down {
-    width: 24px;
     border: none;
     background: transparent;
 }
 
 QComboBox::down-arrow {
-    image: url(:/icons/chevron-down-light.svg);
+    image: url(:src/resources/icons/arrow-down.png);
     width: 16px;
     height: 16px;
 }
 
 QComboBox QAbstractItemView {
-    background: #1a1a2a;
     border: 1px solid rgba(255,255,255,0.08);
     selection-background-color: rgba(147,33,145,0.35);
     selection-color: #fff;
@@ -260,8 +252,64 @@ QSlider::handle:horizontal {
 
 
 /* ============================= TOOLTIP ============================== */
-QToolTip {
-    background-color: #0f0b15;
+
+/* Card audio specifica */
+QWidget[class~="audio-card"] {
+    border: 1.5px solid rgba(173, 61, 111, 0.8);
+    border-radius: 10px;
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(30, 20, 40, 0.8),
+        stop:1 rgba(20, 10, 30, 0.9)
+    );
+    padding: 8px 12px; /* meno verticale per ridurre altezza */
+    outline: none;
+    /* Qt QSS non supporta ombre, da gestire in codice con effetti */
+    /* Min/max height non impostati per adattarsi dinamicamente */
+}
+
+/* Hover: cambia sfondo e bordo */
+QWidget[class~="audio-card"]:hover {
+    border-color: #AD3D6F;
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(50, 30, 60, 0.9),
+        stop:1 rgba(40, 20, 50, 1)
+    );
+}
+
+/* Titolo: testo chiaro e leggibile */
+QLabel[class~="card-title"] {
     color: #E6E2F0;
-    border: 1px solid rgba(147,33,145,0.25);
-    padding: 6px;
+    font-weight: 700;
+    font-size: 18px; /* leggermente più piccolo per compattezza */
+    margin: 0;
+    padding: 0;
+}
+
+/* Sottotitolo: grigio chiaro, più piccolo */
+QLabel[class~="card-subtitle"] {
+    color: #9E9EA6;
+    font-weight: 400;
+    font-size: 10px;
+    font-style: italic;
+    margin: 0; /* zero margine per minor spazio */
+    padding: 0;
+}
+
+/* Divider (linea orizzontale leggera) */
+QFrame[class~="divider"] {
+    background-color: rgba(255, 255, 255, 0.1);
+    max-height: 1px;
+    min-height: 1px; /* fissa altezza a 1px */
+    border: none;
+    margin: 0; /* margine verticale per separare */
+}
+
+/* Label generali dentro audio-card per hover uniforme */
+QWidget[class~="audio-card"] QLabel {
+    background: transparent;
+    transition: background-color 150ms ease, color 150ms ease;
+    padding: 0;
+    border-radius: 4px;
+}

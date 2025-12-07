@@ -1,6 +1,7 @@
 import os
 import json
 
+# TODO: Rendi questa classe staticaaa
 class FileManager:
     def __init__(self, library_path):
         self.library_path = library_path
@@ -15,6 +16,25 @@ class FileManager:
 
     def get_json_path(self, filename):
         return os.path.join(self.library_path, f"{filename}.json")
+
+    @staticmethod
+    def check_file_exists(path):
+        return os.path.exists(path)
+
+    @staticmethod
+    def check_file_extension(path, extension):
+        return path.lower().endswith(extension)
+
+    @staticmethod
+    def delete_file(path):
+        try:
+            os.remove(path)
+            json_path = os.path.splitext(path)[0] + ".json"
+            if os.path.exists(json_path):
+                os.remove(json_path)
+        except Exception as e:
+            # TODO: non fare un print...
+            print("Eh vabbè")
 
     def save_project_json(self, filename, data):
         json_path = self.get_json_path(filename)
