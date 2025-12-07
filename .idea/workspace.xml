@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcc5d326-ef2c-479d-8371-be90b074fd07" name="Changes" comment="piccolo refactor">
-      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/card.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/widgets/cards/project_card.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/screens/library_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/screens/library_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/widgets/cards/add_card.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/widgets/cards/audio_card.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/widgets/cards/base_card.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +229,7 @@
       <workItem from="1764957868792" duration="9495000" />
       <workItem from="1765036334355" duration="82000" />
       <workItem from="1765038438986" duration="32000" />
-      <workItem from="1765097077912" duration="2405000" />
+      <workItem from="1765097077912" duration="2508000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
